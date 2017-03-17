@@ -13,7 +13,7 @@ class XML_Format implements Format {
   }
   private XML_Format(){};
 
-  public String getFakeTestData(){
+  public String getMockData(){
     StringBuilder page = new StringBuilder();
     page.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n")
     .append("<address>\n")
@@ -31,6 +31,6 @@ class XML_Format implements Format {
   }
 
   public String formatList(List<Formatable> listOfFormatables){
-    return getFakeTestData();
+    return getMockData();
   }
 }
