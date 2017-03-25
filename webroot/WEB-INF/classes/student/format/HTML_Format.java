@@ -63,11 +63,11 @@ class HTML_Format implements Format {
                 page.append("<td>"+properties.get(property)+"</td>");
             }
             for (String multiProp : allMultiChildProperties){
-                System.out.println(multiProp);
+                //System.out.println(multiProp);
                 Map<String,String> currentMulitProperties = dataCarrier.getMultiChildProperties(multiProp);
                 page.append("<td>");
                 for (String property : currentMulitProperties.keySet()){
-                    page.append(currentMulitProperties.get(property)+"<br>");
+                    page.append((property+": "+currentMulitProperties.get(property)+"<br>").replace("null:","noName:"));
                 }
                 page.append("</td>");
             }

@@ -1,19 +1,28 @@
 CREATE TABLE tblStudentCourse
 (fldStudentId integer,
 fldCourseId integer,
-fldStartDate date,
 fldStatus varchar(10) DEFAULT "na",
 fldGrade varchar(2),
 fldComment varchar(120),
 CHECK (fldStatus IN ("ongoing", "complete", "aborted", null)),
 CHECK (fldGrade IN ("ig", "g", "vg", null)),
-PRIMARY KEY (fldStudentId, fldCourseId, fldStartDate));
+PRIMARY KEY (fldStudentId, fldCourseId));
 
 CREATE TABLE tblCourse
 (fldCourseId INTEGER PRIMARY KEY AUTOINCREMENT,
-fldName varchar (10),
-fldDescription nvarchar(40),
+fldStartDate date,
+fldEndDate date,
+fldSubjectId integer,
+CHECK (fldStartDate > "2014-01-01"),
+CHECK (fldEndDate > fldStartDate),
 FOREIGN KEY (fldCourseId) REFERENCES tblStudentCourse(fldCourseId));
+
+CREATE TABLE tblSubject
+(fldSubjectId INTEGER PRIMARY KEY AUTOINCREMENT,
+fldName varchar (10),
+fldPoints integer,
+fldDescription nvarchar(40),
+FOREIGN KEY (fldSubjectId) REFERENCES tblCourse(fldCourseId));
 
 CREATE TABLE tblStudent
 (fldStudentId INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -34,7 +43,7 @@ CHECK (fldPrimary IN ("primary", null)),
 CHECK (fldType IN ("mobile", "home", null)),
 FOREIGN KEY (fldPhoneId) REFERENCES tblStudent(fldStudentId));
 
-CREATE VIEW vwAllStudents
+CREATE VIEW vwGetAllStudents
 AS
 SELECT  s.fldStudentId,
         s.fldName,
@@ -47,6 +56,19 @@ FROM tblStudent AS s LEFT JOIN tblStudentPhone AS sp
 ON s.fldStudentId = sp.fldStudentId
 GROUP BY s.fldStudentId
 ORDER BY s.fldName;
+
+
+CREATE VIEW vwGetAllCourses
+AS
+SELECT  c.fldCourseId,
+        c.fldStartDate,
+        c.fldEndDate,
+        (s.fldName || "_" || strftime('%Y', c.fldStartDate)) as nick,
+        s.fldPoints,
+        s.fldDescription
+FROM tblCourse AS c LEFT JOIN tblSubject AS s
+ON c.fldSubjectId = s.fldSubjectId
+ORDER BY c.fldCourseId;
 
 
 CREATE VIEW vwAllActiveStudents
@@ -97,15 +119,39 @@ WHERE fldGrade IS NOT NULL
 GROUP BY fldGrade, fldStudentId;
 
 
-INSERT INTO tblCourse (fldName, fldDescription)
+INSERT INTO tblSubject (fldName, fldPoints, fldDescription)
 VALUES
-("JAVA-101", "Programming with Java"),
-("JAVA-102", "Programming with Java"),
-("DB-101",   "Introduction to Databases"),
-("Bash-101", "Introduction to Bash"),
-("C-101",    "Programming with C"),
-("C-102",    "Programming with C++"),
-("C-103",    "Programming with C#");
+("JAVA-101", 40, "Programming with Java"),
+("JAVA-102", 40, "Programming with Java"),
+("DB-101",   60, "Introduction to Databases"),
+("Bash-101", 15, "Introduction to Bash"),
+("C-101",    60, "Programming with C"),
+("C-102",    40, "Programming with C++"),
+("C-103",    40, "Programming with C#");
+
+
+INSERT INTO tblCourse (fldStartDate, fldEndDate, fldSubjectId)
+VALUES
+("2014-02-22", "2014-11-14", 5),
+("2015-02-21", "2015-10-25", 1),
+("2015-02-21", "2015-11-17", 3),
+("2015-02-21", "2015-05-02", 4),
+("2015-02-21", "2015-11-17", 5),
+("2015-02-21", "2015-10-25", 6),
+("2016-02-18", "2016-10-18", 1),
+("2016-02-18", "2016-10-18", 2),
+("2016-02-18", "2016-11-12", 3),
+("2016-02-18", "2016-04-27", 4),
+("2016-02-18", "2016-11-12", 5),
+("2016-02-18", "2016-10-18", 6),
+("2016-02-18", "2016-10-18", 7),
+("2017-02-23", "2017-10-19", 1),
+("2017-02-23", "2017-10-19", 2),
+("2017-02-23", "2017-11-11", 3),
+("2017-02-23", "2017-05-02", 4),
+("2017-02-23", "2017-11-11", 5),
+("2017-02-23", "2017-10-19", 6),
+("2017-02-23", "2017-10-19", 7);
 
 
 INSERT INTO tblStudent (fldName, fldSurName, fldBirthdate, fldPostAddress, fldStreetAdress)
@@ -139,29 +185,29 @@ VALUES
 (11,"0703-987654","mobile", null);
 
 
-INSERT INTO tblStudentCourse (fldStudentId, fldCourseId, fldStartDate, fldStatus, fldGrade, fldComment)
+INSERT INTO tblStudentCourse (fldStudentId, fldCourseId, fldStatus, fldGrade, fldComment)
 VALUES
-(1,1,"2016-03-12","complete", "g",  null),
-(1,2,"2017-03-12","ongoing",  null, null),
-(2,1,"2016-03-12","complete", "vg", null),
-(2,2,"2017-03-12","ongoing",  null, null),
-(3,1,"2017-03-12","ongoing",  null, null),
-(3,3,"2017-08-20",null,       null, null),
-(4,1,"2015-03-12","complete", "vg", null),
-(4,2,"2015-08-20","complete", "g",  null),
-(4,3,"2017-03-12","ongoing",  null, null),
-(4,4,"2017-03-11","ongoing",  null, null),
-(5,4,"2017-03-11","ongoing",  null, null),
-(6,4,"2017-03-11","ongoing",  null, null),
-(7,1,"2016-03-12","complete", "vg", null),
-(7,4,"2017-03-11","ongoing",  null, null),
-(8,5,"2016-03-12","complete", "g",  null),
-(8,6,"2017-03-11","ongoing",  null, null),
-(9,5,"2015-03-12","complete", "g",  null),
-(9,6,"2016-03-11","complete", "ig", null),
-(10,5,"2013-03-12","complete", "vg", null),
-(10,6,"2014-03-11","complete", "vg", null),
-(10,7,"2015-03-11","complete", "vg", null),
-(11,5,"2013-03-12","complete", "vg", null),
-(11,6,"2014-03-11","complete", "vg", null),
-(11,7,"2015-03-11","complete", "vg", null);
+( 1,7 ,"complete", "g",  null),
+( 1,8 ,"ongoing",  null, null),
+( 2,7 ,"complete", "vg", null),
+( 2,8 ,"ongoing",  null, null),
+( 3,7 ,"ongoing",  null, null),
+( 3,9 ,null,       null, null),
+( 4,7 ,"complete", "vg", null),
+( 4,8 ,"complete", "g",  null),
+( 4,9 ,"ongoing",  null, null),
+( 4,10,"ongoing",  null, null),
+( 5,10,"ongoing",  null, null),
+( 6,10,"ongoing",  null, null),
+( 7,7, "complete", "vg", null),
+( 7,10,"ongoing",  null, null),
+( 8,11,"complete", "g",  null),
+( 8,12,"ongoing",  null, null),
+( 9,11,"complete", "g",  null),
+( 9,12,"complete", "ig", null),
+(10,11,"complete", "vg", null),
+(10,12,"complete", "vg", null),
+(10,13,"complete", "vg", null),
+(11,11,"complete", "vg", null),
+(11,12,"complete", "vg", null),
+(11,13,"complete", "vg", null);

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import student.main.Student;
+import student.main.Course;
 import student.format.Formatable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,20 +30,23 @@ public class SQLStorage implements StudentStorage {
     String query;
 
     if (id == 0) {
-      query = "SELECT * FROM vwAllStudents";
+      query = "SELECT * FROM vwGetAllStudents";
     } else {
-      query = "SELECT * FROM vwAllStudents WHERE fldStudentId = "+id;
+      query = "SELECT * FROM vwGetAllStudents WHERE fldStudentId = "+id;
     }
     try {
       ResultSet rsStudent = connection.runSelectQuery(query);
       while (rsStudent.next()){
-          ResultSet rsPhone = connection.runSelectQuery("SELECT * FROM tblStudentPhone WHERE fldStudentId = "+id);
+          int currentStudentID = rsStudent.getInt("fldStudentId");
+          System.out.println("SQLStorage: ping!"+currentStudentID);
+          ResultSet rsPhone = connection.runSelectQuery("SELECT * FROM tblStudentPhone WHERE fldStudentId = "+currentStudentID);
           Map<String, String> phonenumbers = new HashMap<>();
           while (rsPhone.next()){
+              System.out.println("SQLStorage: ping!");
             phonenumbers.put(rsPhone.getString("fldType"), rsPhone.getString("fldNumber"));
           }
 
-          returningList.add(new Student(rsStudent.getInt("fldStudentId"),
+          returningList.add(new Student(currentStudentID,
                                         rsStudent.getString("fldName"),
                                         rsStudent.getString("fldSurName"),
                                         rsStudent.getString("age"),
@@ -57,11 +61,38 @@ public class SQLStorage implements StudentStorage {
   	}
     return returningList;
   }
-  public void removeStudent(int id){
 
+
+  public List<Formatable> getCourse(int id){
+
+    List<Formatable> returningList = new ArrayList<>();
+    String query;
+
+    if (id == 0) {
+      query = "SELECT * FROM vwGetAllCourses";
+    } else {
+      query = "SELECT * FROM vwGetAllCourses WHERE fldCourseId = "+id;
+    }
+    try {
+      ResultSet rsCourse = connection.runSelectQuery(query);
+      while (rsCourse.next()){
+          int currentCourseID = rsCourse.getInt("fldCourseId");
+          System.out.println("SQLStorage: ping!"+currentCourseID);
+          returningList.add(new Course(currentCourseID,
+                                        rsCourse.getString("fldStartDate"),
+                                        rsCourse.getString("fldEndDate"),
+                                        rsCourse.getString("nick"),
+                                        rsCourse.getString("fldPoints"),
+                                        rsCourse.getString("fldDescription"),
+                                        new HashMap<>()));
+      }
+    } catch (DBConnectionException dbe) {
+  		System.err.println("DATABASE CONNECTION ERROR: " + dbe.getMessage());
+  	} catch (SQLException sqle) {
+  		System.err.println("SQL ERROR: " + sqle.getMessage());
+  	}
+    return returningList;
   }
-  public int addStudent(String name, String surName, String dateOfBirth){
-    return 1;
-  }
+
 
 }
