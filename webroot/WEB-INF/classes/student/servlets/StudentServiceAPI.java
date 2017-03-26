@@ -31,39 +31,69 @@ public class StudentServiceAPI extends HttpServlet{
 		StringBuilder responseBuilder = new StringBuilder();
         String requestFormat = request.getParameter("format");  //xml/json/csv/html/etc
         String requestType = request.getParameter("type");      //students/courses/phonenumbers
+        String requestBy = request.getParameter("by");
         String requestId = request.getParameter("id");          //studentId/courseId
 
-        System.out.println("RF: " + requestFormat + "   RID: " + requestId);
-
-        if (requestId == null || requestId.equals("")) {
-            responseBuilder.append(getErrorMessage("400"))
-                            .append("'id'");
-        } else if (requestFormat == null) {
-            responseBuilder.append(getErrorMessage("400"))
-                            .append("'format'");
-        } else if (requestType == null) {
+        if (requestType == null) {
             responseBuilder.append(getErrorMessage("400"))
                             .append("'type'");
         } else {
-            //responseBuilder.append(getErrorMessage("200"));
-            //responseBuilder.append(ss.testMe());
             switch (requestType) {
                 case "student":
-                    responseBuilder.append(ss.getStudent(parseId(requestId), requestFormat));
+                    responseBuilder.append(studentRequest(requestBy, requestId, requestFormat));
                     break;
                 case "course":
-                    responseBuilder.append(ss.getCourse(parseId(requestId), requestFormat));
+                    responseBuilder.append(courseRequest(requestBy, requestId, requestFormat));
                     break;
                 default:
-                    responseBuilder.append(getErrorMessage("600"))
-                                    .append(requestType);
+                    responseBuilder.append(getErrorMessage("401"))
+                                    .append("type="+requestType);
                     break;
             }
         }
-
         responseWriter.println(responseBuilder);
 		responseWriter.close();
 	}
+
+    private String studentRequest(String by, String id, String format){
+        String retrievdInfo;
+        if ( by == null ) {
+            if ( id == null ) {
+                retrievdInfo = getErrorMessage("400")+"id";
+            } else {
+                retrievdInfo = ss.getFullStudentInfo(parseId(id), format);
+            }
+        } else if ( by.equals("course") ) {
+            if ( id == null ) {
+                retrievdInfo = getErrorMessage("400")+"id";
+            } else {
+                retrievdInfo = ss.getStudentsByCourse(parseId(id), format);
+            }
+        } else  {
+            retrievdInfo = getErrorMessage("401")+"by="+by;
+        }
+        return retrievdInfo;
+    }
+
+    private String courseRequest(String by, String id, String format){
+        String retrievdInfo;
+        if ( by == null ) {
+            if ( id == null ) {
+                retrievdInfo = getErrorMessage("400")+"id";
+            } else {
+                retrievdInfo = ss.getFullCourseInfo(parseId(id), format);
+            }
+        } else if ( by.equals("year") ) {
+            if ( id == null ) {
+                retrievdInfo = getErrorMessage("400")+"id";
+            } else {
+                retrievdInfo = ss.getCoursesByYear(parseId(id), format);
+            }
+        } else  {
+            retrievdInfo = getErrorMessage("401")+"by="+by;
+        }
+        return retrievdInfo;
+    }
 
     private String getErrorMessage(String code){
         String message;

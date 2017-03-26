@@ -15,84 +15,142 @@ import java.sql.SQLException;
 
 public class SQLStorage implements StudentStorage {
 
-  private static DatabaseConnection connection;
-  static {
-    try {
-      connection = DatabaseConnectionFactory.getDatabaseConnection();
-    } catch (DBConnectionException dbce){
-      System.err.println(dbce.getMessage());
+    private static DatabaseConnection connection;
+    static {
+        try {
+            connection = DatabaseConnectionFactory.getDatabaseConnection();
+        } catch (DBConnectionException dbce){
+            System.err.println(dbce.getMessage());
+        }
     }
-  }
 
-  public List<Formatable> getStudent(int id){
+    public List<Formatable> getStudent(int id){
 
-    List<Formatable> returningList = new ArrayList<>();
-    String query;
+        List<Formatable> returningList = new ArrayList<>();
+        String query;
 
-    if (id == 0) {
-      query = "SELECT * FROM vwGetAllStudents";
-    } else {
-      query = "SELECT * FROM vwGetAllStudents WHERE fldStudentId = "+id;
+        if (id == 0) {  query = "SELECT * FROM vwGetStudent"; }
+        else {          query = "SELECT * FROM vwGetStudent WHERE fldStudentId = "+id; }
+        try {
+            ResultSet rsStudent = connection.runSelectQuery(query);
+            while (rsStudent.next()){
+                int currentStudentID = rsStudent.getInt("fldStudentId");
+                System.out.println("SQLStorage: ping!"+currentStudentID);
+
+                ResultSet rsPhone = connection.runSelectQuery("SELECT * FROM tblStudentPhone WHERE fldStudentId = "+currentStudentID);
+                Map<String, String> phonenumbers = new HashMap<>();
+                while (rsPhone.next()){
+                    System.out.println("SQLStorage: ping!");
+                    phonenumbers.put(rsPhone.getString("fldType"), rsPhone.getString("fldNumber"));
+                }
+
+                ResultSet rsCourse = connection.runSelectQuery("SELECT * FROM vwGetCoursesForStudent WHERE fldStudentId = "+currentStudentID);
+                ArrayList<Map<String,String>> courseList = new ArrayList<>();
+                while (rsCourse.next()){
+                    Map<String, String> course = new HashMap<>();
+                    course.put("id", rsCourse.getString("fldCourseId"));
+                    course.put("name", rsCourse.getString("name"));
+                    course.put("status", rsCourse.getString("fldStatus"));
+                    course.put("grade", rsCourse.getString("fldGrade"));
+                    courseList.add(course);
+                }
+                returningList.add(new Student(currentStudentID,
+                                            rsStudent.getString("fldName"),
+                                            rsStudent.getString("fldSurName"),
+                                            rsStudent.getString("age"),
+                                            rsStudent.getString("fldPostAddress"),
+                                            rsStudent.getString("fldStreetAdress"),
+                                            phonenumbers,
+                                            courseList));
+            }
+        } catch (DBConnectionException dbe) {
+  		    System.err.println("DATABASE CONNECTION ERROR: " + dbe.getMessage());
+  	    } catch (SQLException sqle) {
+  		    System.err.println("SQL ERROR: " + sqle.getMessage());
+  	    }
+        return returningList;
     }
-    try {
-      ResultSet rsStudent = connection.runSelectQuery(query);
-      while (rsStudent.next()){
-          int currentStudentID = rsStudent.getInt("fldStudentId");
-          System.out.println("SQLStorage: ping!"+currentStudentID);
-          ResultSet rsPhone = connection.runSelectQuery("SELECT * FROM tblStudentPhone WHERE fldStudentId = "+currentStudentID);
-          Map<String, String> phonenumbers = new HashMap<>();
-          while (rsPhone.next()){
-              System.out.println("SQLStorage: ping!");
-            phonenumbers.put(rsPhone.getString("fldType"), rsPhone.getString("fldNumber"));
-          }
 
-          returningList.add(new Student(currentStudentID,
-                                        rsStudent.getString("fldName"),
-                                        rsStudent.getString("fldSurName"),
-                                        rsStudent.getString("age"),
-                                        rsStudent.getString("fldPostAddress"),
-                                        rsStudent.getString("fldStreetAdress"),
-                                        phonenumbers));
-      }
-    } catch (DBConnectionException dbe) {
-  		System.err.println("DATABASE CONNECTION ERROR: " + dbe.getMessage());
-  	} catch (SQLException sqle) {
-  		System.err.println("SQL ERROR: " + sqle.getMessage());
-  	}
-    return returningList;
-  }
+    public List<Formatable> getStudentsByCourse(int id){
 
+        List<Formatable> returningList = new ArrayList<>();
+        String query;
 
-  public List<Formatable> getCourse(int id){
+        if (id == 0) {  query = "SELECT * FROM vwGetStudentsByCourse"; }
+        else {          query = "SELECT * FROM vwGetStudentsByCourse WHERE fldCourseId = '"+id+"'"; }
+        try {
+            ResultSet rsStudent = connection.runSelectQuery(query);
+            while (rsStudent.next()){
+                int currentStudentID = rsStudent.getInt("fldStudentId");
+                System.out.println("SQLStorage: ping!"+currentStudentID);
+                ResultSet rsPhone = connection.runSelectQuery("SELECT * FROM tblStudentPhone WHERE fldStudentId = "+currentStudentID);
+                Map<String, String> phonenumbers = new HashMap<>();
+                while (rsPhone.next()){
+                    System.out.println("SQLStorage: ping!");
+                    phonenumbers.put(rsPhone.getString("fldType"), rsPhone.getString("fldNumber"));
+                }
 
-    List<Formatable> returningList = new ArrayList<>();
-    String query;
-
-    if (id == 0) {
-      query = "SELECT * FROM vwGetAllCourses";
-    } else {
-      query = "SELECT * FROM vwGetAllCourses WHERE fldCourseId = "+id;
+                returningList.add(new Student(currentStudentID,
+                                            rsStudent.getString("fldName"),
+                                            rsStudent.getString("fldSurName")));
+            }
+        } catch (DBConnectionException dbe) {
+  		    System.err.println("DATABASE CONNECTION ERROR: " + dbe.getMessage());
+  	    } catch (SQLException sqle) {
+  		    System.err.println("SQL ERROR: " + sqle.getMessage());
+  	    }
+        return returningList;
     }
-    try {
-      ResultSet rsCourse = connection.runSelectQuery(query);
-      while (rsCourse.next()){
-          int currentCourseID = rsCourse.getInt("fldCourseId");
-          System.out.println("SQLStorage: ping!"+currentCourseID);
-          returningList.add(new Course(currentCourseID,
+
+    public List<Formatable> getCourse(int id){
+
+        List<Formatable> returningList = new ArrayList<>();
+        String query;
+
+        if (id == 0) {  query = "SELECT * FROM vwGetAllCourses"; }
+        else {          query = "SELECT * FROM vwGetAllCourses WHERE fldCourseId = "+id; }
+        try {
+            ResultSet rsCourse = connection.runSelectQuery(query);
+            while (rsCourse.next()){
+                int currentCourseID = rsCourse.getInt("fldCourseId");
+                System.out.println("SQLStorage: ping!"+currentCourseID);
+                returningList.add(new Course(currentCourseID,
                                         rsCourse.getString("fldStartDate"),
                                         rsCourse.getString("fldEndDate"),
-                                        rsCourse.getString("nick"),
+                                        rsCourse.getString("name"),
                                         rsCourse.getString("fldPoints"),
                                         rsCourse.getString("fldDescription"),
-                                        new HashMap<>()));
-      }
-    } catch (DBConnectionException dbe) {
-  		System.err.println("DATABASE CONNECTION ERROR: " + dbe.getMessage());
-  	} catch (SQLException sqle) {
-  		System.err.println("SQL ERROR: " + sqle.getMessage());
-  	}
-    return returningList;
-  }
+                                        new ArrayList<>()));
+            }
+        } catch (DBConnectionException dbe) {
+  		    System.err.println("DATABASE CONNECTION ERROR: " + dbe.getMessage());
+  	    } catch (SQLException sqle) {
+  		    System.err.println("SQL ERROR: " + sqle.getMessage());
+  	    }
+        return returningList;
+    }
+
+    public List<Formatable> getCoursesByYear(int id){
+
+        List<Formatable> returningList = new ArrayList<>();
+        String query;
+
+        if (id == 0) {  query = "SELECT * FROM vwGetCoursesByYear"; }
+        else {          query = "SELECT * FROM vwGetCoursesByYear WHERE year = '"+id+"'"; }
+        try {
+            ResultSet rsCourse = connection.runSelectQuery(query);
+            while (rsCourse.next()){
+                int currentCourseID = rsCourse.getInt("fldCourseId");
+                System.out.println("SQLStorage: ping!"+currentCourseID);
+                returningList.add(new Course(currentCourseID, rsCourse.getString("name")));
+            }
+        } catch (DBConnectionException dbe) {
+  		    System.err.println("DATABASE CONNECTION ERROR: " + dbe.getMessage());
+  	    } catch (SQLException sqle) {
+  		    System.err.println("SQL ERROR: " + sqle.getMessage());
+  	    }
+        return returningList;
+    }
 
 
 }

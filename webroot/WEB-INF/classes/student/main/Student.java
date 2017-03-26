@@ -12,7 +12,7 @@ public class Student implements Formatable {
     private Map<String, Map<String,String>> multiChlidProperties = new TreeMap<>();
     private Map<String, String> properties = new TreeMap<>();
 
-    public Student(int studentId, String name, String surname, String age, String postAddress, String streetAdress, Map phonenumber){
+    public Student(int studentId, String name, String surname, String age, String postAddress, String streetAdress, Map<String,String> phonenumbers, List<Map<String,String>> courses){
         this.id = studentId;
         properties.put("studentID", String.valueOf(studentId));
         properties.put("name", name);
@@ -20,7 +20,16 @@ public class Student implements Formatable {
         properties.put("age", age);
         properties.put("postAddress", postAddress);
         properties.put("streetAddress", streetAdress);
-        multiChlidProperties.put("phonenumber", phonenumber);
+        multiChlidProperties.put("phonenumbers",phonenumbers);
+        for (Map m : courses){
+            multiChlidProperties.put("course_"+m.get("id"),m);
+        }
+    }
+    public Student(int studentId, String name, String surname){
+        this.id = studentId;
+        properties.put("studentID", String.valueOf(studentId));
+        properties.put("name", name);
+        properties.put("surname", surname);
     }
 
     public int getId(){

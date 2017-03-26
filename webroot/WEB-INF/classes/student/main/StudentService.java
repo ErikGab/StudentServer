@@ -34,11 +34,15 @@ public class StudentService {
 
     private StudentService(){};
 
-    public String getStudent(int id, String format){
+    public String getFullStudentInfo(int id, String format){
+        return "not yet implemented";
+    }
+
+    public String getStudentsByCourse(int id, String format){
         String response;
         List<Formatable> students;
         try {
-            students = storage.getStudent(id);
+            students = storage.getStudentsByCourse(id);
             response = FormatService.formatList(students, format);
         } catch (StudentStorageException sse){
             System.err.println(sse.getMessage());
@@ -50,11 +54,15 @@ public class StudentService {
         return response;
     }
 
-    public String getCourse(int id, String format){
+    public String getFullCourseInfo(int id, String format){
+        return "not yet implemented";
+    }
+
+    public String getCoursesByYear(int id, String format){
         String response;
         List<Formatable> courses;
         try {
-            courses = storage.getCourse(id);
+            courses = storage.getCoursesByYear(id);
             response = FormatService.formatList(courses, format);
         } catch (StudentStorageException sse){
             System.err.println(sse.getMessage());

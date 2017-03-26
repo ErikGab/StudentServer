@@ -43,7 +43,16 @@ CHECK (fldPrimary IN ("primary", null)),
 CHECK (fldType IN ("mobile", "home", null)),
 FOREIGN KEY (fldPhoneId) REFERENCES tblStudent(fldStudentId));
 
-CREATE VIEW vwGetAllStudents
+CREATE VIEW vwGetStudentsByCourse
+AS
+SELECT  sc.fldCourseId,
+        s.fldStudentId,
+        s.fldName,
+        s.fldSurName
+FROM tblStudentCourse AS sc LEFT JOIN tblStudent AS s
+ON s.fldStudentId = sc.fldStudentId;
+
+CREATE VIEW vwGetStudent
 AS
 SELECT  s.fldStudentId,
         s.fldName,
@@ -57,13 +66,35 @@ ON s.fldStudentId = sp.fldStudentId
 GROUP BY s.fldStudentId
 ORDER BY s.fldName;
 
+CREATE VIEW vwGetCoursesForStudent
+AS
+SELECT  sc.fldStudentId,
+        sc.fldCourseId,
+        (s.fldName || "_" || strftime('%Y', c.fldStartDate)) as name,
+        sc.fldStatus,
+        sc.fldGrade
+FROM tblStudentCourse AS sc
+LEFT JOIN tblCourse AS c
+ON sc.fldCourseId = c.fldSubjectId
+LEFT JOIN tblSubject AS s
+ON c.fldSubjectId = c.fldSubjectId
+ORDER BY c.fldCourseId;
 
-CREATE VIEW vwGetAllCourses
+CREATE VIEW vwGetCoursesByYear
+AS
+SELECT  c.fldCourseId,
+        (s.fldName || "_" || strftime('%Y', c.fldStartDate)) as name,
+        strftime('%Y', c.fldStartDate) as year
+FROM tblCourse AS c LEFT JOIN tblSubject AS s
+ON c.fldSubjectId = s.fldSubjectId
+ORDER BY c.fldCourseId;
+
+CREATE VIEW vwGetCourse
 AS
 SELECT  c.fldCourseId,
         c.fldStartDate,
         c.fldEndDate,
-        (s.fldName || "_" || strftime('%Y', c.fldStartDate)) as nick,
+        (s.fldName || "_" || strftime('%Y', c.fldStartDate)) as name,
         s.fldPoints,
         s.fldDescription
 FROM tblCourse AS c LEFT JOIN tblSubject AS s
@@ -71,52 +102,7 @@ ON c.fldSubjectId = s.fldSubjectId
 ORDER BY c.fldCourseId;
 
 
-CREATE VIEW vwAllActiveStudents
-AS
-SELECT  s.fldStudentId,
-        s.fldName,
-        s.fldSurName,
-        ((strftime('%Y', 'now') - strftime('%Y', s.fldBirthdate)) - (strftime('%m-%d', 'now') < strftime('%m-%d', s.fldBirthdate))) AS "age",
-        s.fldPostAddress,
-        s.fldStreetAdress,
-        sp.fldNumber
-FROM tblStudent AS s LEFT JOIN tblStudentPhone AS sp
-ON s.fldStudentId = sp.fldStudentId
-JOIN tblStudentCourse as sc
-ON s.fldStudentId = sc.fldStudentId
-WHERE sc.fldStatus = "ongoing"
-GROUP BY s.fldStudentId
-ORDER BY s.fldName;
 
-CREATE VIEW vwNrOfOngoingCourses
-AS
-SELECT  s.fldStudentId,
-        s.fldName,
-        COUNT(sc.fldCourseId)
-FROM tblStudent AS s LEFT JOIN tblStudentCourse as sc
-ON s.fldStudentId = sc.fldStudentId
-WHERE sc.fldStatus = "ongoing"
-GROUP BY s.fldStudentId
-ORDER BY s.fldName;
-
-CREATE VIEW vwNrOfCompletedCourses
-AS
-SELECT  s.fldStudentId,
-        s.fldName,
-        COUNT(sc.fldCourseId)
-FROM tblStudent AS s LEFT JOIN tblStudentCourse as sc
-ON s.fldStudentId = sc.fldStudentId
-WHERE sc.fldStatus = "complete"
-GROUP BY s.fldStudentId
-ORDER BY s.fldName;
-
-
-CREATE VIEW vwGradeOverview
-AS
-SELECT  fldStudentId, COUNT(fldGrade), fldGrade
-FROM tblStudentCourse
-WHERE fldGrade IS NOT NULL
-GROUP BY fldGrade, fldStudentId;
 
 
 INSERT INTO tblSubject (fldName, fldPoints, fldDescription)
@@ -211,3 +197,50 @@ VALUES
 (11,11,"complete", "vg", null),
 (11,12,"complete", "vg", null),
 (11,13,"complete", "vg", null);
+
+-- CREATE VIEW vwAllActiveStudents
+-- AS
+-- SELECT  s.fldStudentId,
+--         s.fldName,
+--         s.fldSurName,
+--         ((strftime('%Y', 'now') - strftime('%Y', s.fldBirthdate)) - (strftime('%m-%d', 'now') < strftime('%m-%d', s.fldBirthdate))) AS "age",
+--         s.fldPostAddress,
+--         s.fldStreetAdress,
+--         sp.fldNumber
+-- FROM tblStudent AS s LEFT JOIN tblStudentPhone AS sp
+-- ON s.fldStudentId = sp.fldStudentId
+-- JOIN tblStudentCourse as sc
+-- ON s.fldStudentId = sc.fldStudentId
+-- WHERE sc.fldStatus = "ongoing"
+-- GROUP BY s.fldStudentId
+-- ORDER BY s.fldName;
+--
+-- CREATE VIEW vwNrOfOngoingCourses
+-- AS
+-- SELECT  s.fldStudentId,
+--         s.fldName,
+--         COUNT(sc.fldCourseId)
+-- FROM tblStudent AS s LEFT JOIN tblStudentCourse as sc
+-- ON s.fldStudentId = sc.fldStudentId
+-- WHERE sc.fldStatus = "ongoing"
+-- GROUP BY s.fldStudentId
+-- ORDER BY s.fldName;
+--
+-- CREATE VIEW vwNrOfCompletedCourses
+-- AS
+-- SELECT  s.fldStudentId,
+--         s.fldName,
+--         COUNT(sc.fldCourseId)
+-- FROM tblStudent AS s LEFT JOIN tblStudentCourse as sc
+-- ON s.fldStudentId = sc.fldStudentId
+-- WHERE sc.fldStatus = "complete"
+-- GROUP BY s.fldStudentId
+-- ORDER BY s.fldName;
+--
+--
+-- CREATE VIEW vwGradeOverview
+-- AS
+-- SELECT  fldStudentId, COUNT(fldGrade), fldGrade
+-- FROM tblStudentCourse
+-- WHERE fldGrade IS NOT NULL
+-- GROUP BY fldGrade, fldStudentId;
