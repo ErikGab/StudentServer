@@ -66,19 +66,28 @@ ON s.fldStudentId = sp.fldStudentId
 GROUP BY s.fldStudentId
 ORDER BY s.fldName;
 
+CREATE VIEW vwGetStudentForCourse
+AS
+SELECT  sc.fldCourseId,
+        s.fldStudentId,
+        s.fldName,
+        s.fldSurName,
+        sc.fldStatus,
+        sc.fldGrade
+FROM tblStudentCourse AS sc LEFT JOIN tblStudent AS s
+ON s.fldStudentId = sc.fldStudentId;
+
 CREATE VIEW vwGetCoursesForStudent
 AS
 SELECT  sc.fldStudentId,
         sc.fldCourseId,
-        (s.fldName || "_" || strftime('%Y', c.fldStartDate)) as name,
+        c.name as name,
         sc.fldStatus,
         sc.fldGrade
-FROM tblStudentCourse AS sc
-LEFT JOIN tblCourse AS c
-ON sc.fldCourseId = c.fldSubjectId
-LEFT JOIN tblSubject AS s
-ON c.fldSubjectId = c.fldSubjectId
-ORDER BY c.fldCourseId;
+FROM tblStudentCourse as sc
+LEFT JOIN vwGetCourse as c
+ON sc.fldCourseId = c.fldCourseId;
+
 
 CREATE VIEW vwGetCoursesByYear
 AS

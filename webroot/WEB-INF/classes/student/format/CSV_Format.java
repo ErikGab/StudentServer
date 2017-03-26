@@ -57,9 +57,13 @@ class CSV_Format implements Format {
             }
             for (String multiProp : allMultiChildProperties){
                 Map<String,String> currentMulitProperties = dataCarrier.getMultiChildProperties(multiProp);
-                for (String property : currentMulitProperties.keySet()){
-                    page.append(currentMulitProperties.get(property)+":");
-                }
+                if (currentMulitProperties == null){
+                    System.err.println("null");
+                } else {
+                    for (String property : currentMulitProperties.keySet()){
+                        page.append(currentMulitProperties.get(property)+":");
+                    }
+                }  
                 page.append(",");
             }
             page.append("\n");

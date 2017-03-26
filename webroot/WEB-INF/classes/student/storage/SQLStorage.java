@@ -107,20 +107,33 @@ public class SQLStorage implements StudentStorage {
         List<Formatable> returningList = new ArrayList<>();
         String query;
 
-        if (id == 0) {  query = "SELECT * FROM vwGetAllCourses"; }
-        else {          query = "SELECT * FROM vwGetAllCourses WHERE fldCourseId = "+id; }
+        if (id == 0) {  query = "SELECT * FROM vwGetCourse"; }
+        else {          query = "SELECT * FROM vwGetCourse WHERE fldCourseId = "+id; }
         try {
             ResultSet rsCourse = connection.runSelectQuery(query);
             while (rsCourse.next()){
                 int currentCourseID = rsCourse.getInt("fldCourseId");
                 System.out.println("SQLStorage: ping!"+currentCourseID);
+
+                ResultSet rsStudent = connection.runSelectQuery("SELECT * FROM vwGetStudentForCourse WHERE fldCourseId = "+currentCourseID);
+                ArrayList<Map<String,String>> studentList = new ArrayList<>();
+                while (rsStudent.next()){
+                    Map<String, String> student = new HashMap<>();
+                    student.put("id", rsStudent.getString("fldStudentId"));
+                    student.put("name", rsStudent.getString("fldName"));
+                    student.put("surname", rsStudent.getString("fldSurName"));
+                    student.put("status", rsStudent.getString("fldStatus"));
+                    student.put("grade", rsStudent.getString("fldGrade"));
+                    studentList.add(student);
+                }
+
                 returningList.add(new Course(currentCourseID,
                                         rsCourse.getString("fldStartDate"),
                                         rsCourse.getString("fldEndDate"),
                                         rsCourse.getString("name"),
                                         rsCourse.getString("fldPoints"),
                                         rsCourse.getString("fldDescription"),
-                                        new ArrayList<>()));
+                                        studentList));
             }
         } catch (DBConnectionException dbe) {
   		    System.err.println("DATABASE CONNECTION ERROR: " + dbe.getMessage());
