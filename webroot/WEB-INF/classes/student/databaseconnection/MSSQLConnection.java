@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
 
 public class MSSQLConnection implements DatabaseConnection {
 
-		Connection conn = null;
+	Connection conn = null;
     String url;
     Statement stmt = null;
     ResultSet rs = null;

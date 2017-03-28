@@ -13,9 +13,9 @@ import javax.swing.JOptionPane;
 public class SQLiteConnection implements DatabaseConnection {
 
 	Connection conn = null;
-  Statement stmt = null;
-  ResultSet rs = null;
-  static private final String CONNECTIONS_XML = "webroot/WEB-INF/classes/student/databaseconnection/availibleConnections.xml";
+  	Statement stmt = null;
+  	ResultSet rs = null;
+  	static private final String CONNECTIONS_XML = "webroot/WEB-INF/classes/student/databaseconnection/availibleConnections.xml";
 	static {
 		try {
 			Properties connectionProperties = new Properties();
@@ -30,13 +30,13 @@ public class SQLiteConnection implements DatabaseConnection {
 	}
 
 	private final static String DB_CONN_STR="jdbc:sqlite:";
-  static{
-    try{
-      Class.forName("org.sqlite.JDBC");
-    }catch(ClassNotFoundException cnfe){
-      System.err.println("Could not load driver: "+cnfe.getMessage());
-    }
-  }
+  	static{
+    	try{
+      		Class.forName("org.sqlite.JDBC");
+    	} catch (ClassNotFoundException cnfe){
+      		System.err.println("Could not load driver: "+cnfe.getMessage());
+    	}
+  	}
 
 	public SQLiteConnection(String db){
 		getConnected(db);

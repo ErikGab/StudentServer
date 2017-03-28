@@ -23,21 +23,16 @@ class JSON_Format implements Format {
 
     private JSON_Format(){};
 
-
     public String formatList(List<Formatable> listOfFormatables){
         page = new StringBuilder();
         sortFormatables(listOfFormatables);
         StringWriter writer = new StringWriter();
         JsonWriter jWriter = Json.createWriter(writer);
-
         JsonObjectBuilder job = Json.createObjectBuilder();
-
         for (String type:sortedFormatables.keySet()){
             job.add(type,listOfFormatables2JasonArrayBuilder(sortedFormatables.get(type)));
         }
-
         JsonObject jo = job.build();
-
         jWriter.writeObject(jo);
         jWriter.close();
         page.append(writer.toString());
@@ -62,24 +57,16 @@ class JSON_Format implements Format {
             //System.out.println(key+"  :  "+ properties.get(key));
             String value = properties.get(key);
             if (key == null){
-                if (value == null){
-                    //ob.add("","");
-                } else {
-                    ob.add("",value);
-                }
+                if (value != null){ ob.add("",value); }
             } else {
-                if (value == null){
-                    ob.add(key,"");
-                } else {
-                    ob.add(key,value);
-                }
+                if (value == null){ ob.add(key,""); }
+                else {              ob.add(key,value); }
             }
         }
         for (Formatable subItem:subItems){
             ob.add(subItem.getItemType(), Json.createArrayBuilder()
                 .add(formatable2JasonObject(subItem)));
         }
-
         return ob.build();
     }
 

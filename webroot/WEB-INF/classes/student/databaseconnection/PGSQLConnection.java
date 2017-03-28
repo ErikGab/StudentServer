@@ -11,7 +11,13 @@ import javax.swing.JOptionPane;
 
 public class PGSQLConnection implements DatabaseConnection {
 
-		Connection conn = null;
+	//
+	//	THIS IS A COPY OF MSSQLConnection.
+	//
+	//	2DO MAKE POSTGRES CONNECTION OF THIS TEMPLATE
+	//
+
+	Connection conn = null;
     String url;
     Statement stmt = null;
     ResultSet rs = null;
