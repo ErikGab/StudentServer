@@ -7,8 +7,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
-import student.main.Student;
-import student.main.Course;
+import student.format.StdItem;
 import student.format.Formatable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -35,33 +34,34 @@ public class SQLStorage implements StudentStorage {
             ResultSet rsStudent = connection.runSelectQuery(query);
             while (rsStudent.next()){
                 int currentStudentID = rsStudent.getInt("fldStudentId");
-                System.out.println("SQLStorage: ping!"+currentStudentID);
+                List<Formatable> subItems = new ArrayList<>();
 
                 ResultSet rsPhone = connection.runSelectQuery("SELECT * FROM tblStudentPhone WHERE fldStudentId = "+currentStudentID);
                 Map<String, String> phonenumbers = new HashMap<>();
                 while (rsPhone.next()){
-                    System.out.println("SQLStorage: ping!");
                     phonenumbers.put(rsPhone.getString("fldType"), rsPhone.getString("fldNumber"));
                 }
+                subItems.add(new StdItem("phonenumbers", 1, phonenumbers));
 
                 ResultSet rsCourse = connection.runSelectQuery("SELECT * FROM vwGetCoursesForStudent WHERE fldStudentId = "+currentStudentID);
-                ArrayList<Map<String,String>> courseList = new ArrayList<>();
                 while (rsCourse.next()){
                     Map<String, String> course = new HashMap<>();
                     course.put("id", rsCourse.getString("fldCourseId"));
                     course.put("name", rsCourse.getString("name"));
                     course.put("status", rsCourse.getString("fldStatus"));
                     course.put("grade", rsCourse.getString("fldGrade"));
-                    courseList.add(course);
+                    subItems.add(new StdItem("course", rsCourse.getInt("fldCourseId"), course));
                 }
-                returningList.add(new Student(currentStudentID,
-                                            rsStudent.getString("fldName"),
-                                            rsStudent.getString("fldSurName"),
-                                            rsStudent.getString("age"),
-                                            rsStudent.getString("fldPostAddress"),
-                                            rsStudent.getString("fldStreetAdress"),
-                                            phonenumbers,
-                                            courseList));
+
+                Map<String, String> properties = new HashMap<>();
+                properties.put("id", rsStudent.getString("fldStudentId"));
+                properties.put("name", rsStudent.getString("fldName"));
+                properties.put("surname", rsStudent.getString("fldSurName"));
+                properties.put("age", rsStudent.getString("age"));
+                properties.put("postAddress", rsStudent.getString("fldPostAddress"));
+                properties.put("streetAdress", rsStudent.getString("fldStreetAdress"));
+
+                returningList.add(new StdItem("student", currentStudentID, properties, subItems));
             }
         } catch (DBConnectionException dbe) {
   		    System.err.println("DATABASE CONNECTION ERROR: " + dbe.getMessage());
@@ -82,17 +82,11 @@ public class SQLStorage implements StudentStorage {
             ResultSet rsStudent = connection.runSelectQuery(query);
             while (rsStudent.next()){
                 int currentStudentID = rsStudent.getInt("fldStudentId");
-                System.out.println("SQLStorage: ping!"+currentStudentID);
-                ResultSet rsPhone = connection.runSelectQuery("SELECT * FROM tblStudentPhone WHERE fldStudentId = "+currentStudentID);
-                Map<String, String> phonenumbers = new HashMap<>();
-                while (rsPhone.next()){
-                    System.out.println("SQLStorage: ping!");
-                    phonenumbers.put(rsPhone.getString("fldType"), rsPhone.getString("fldNumber"));
-                }
-
-                returningList.add(new Student(currentStudentID,
-                                            rsStudent.getString("fldName"),
-                                            rsStudent.getString("fldSurName")));
+                Map<String, String> properties = new HashMap<>();
+                properties.put("id", rsStudent.getString("fldStudentId"));
+                properties.put("name", rsStudent.getString("fldName"));
+                properties.put("surname", rsStudent.getString("fldSurName"));
+                returningList.add(new StdItem("student", currentStudentID, properties));
             }
         } catch (DBConnectionException dbe) {
   		    System.err.println("DATABASE CONNECTION ERROR: " + dbe.getMessage());
@@ -113,27 +107,28 @@ public class SQLStorage implements StudentStorage {
             ResultSet rsCourse = connection.runSelectQuery(query);
             while (rsCourse.next()){
                 int currentCourseID = rsCourse.getInt("fldCourseId");
-                System.out.println("SQLStorage: ping!"+currentCourseID);
+                List<Formatable> subItems = new ArrayList<>();
 
                 ResultSet rsStudent = connection.runSelectQuery("SELECT * FROM vwGetStudentForCourse WHERE fldCourseId = "+currentCourseID);
-                ArrayList<Map<String,String>> studentList = new ArrayList<>();
                 while (rsStudent.next()){
-                    Map<String, String> student = new HashMap<>();
-                    student.put("id", rsStudent.getString("fldStudentId"));
-                    student.put("name", rsStudent.getString("fldName"));
-                    student.put("surname", rsStudent.getString("fldSurName"));
-                    student.put("status", rsStudent.getString("fldStatus"));
-                    student.put("grade", rsStudent.getString("fldGrade"));
-                    studentList.add(student);
+                    Map<String, String> studentProperties = new HashMap<>();
+                    studentProperties.put("id", rsStudent.getString("fldStudentId"));
+                    studentProperties.put("name", rsStudent.getString("fldName"));
+                    studentProperties.put("surname", rsStudent.getString("fldSurName"));
+                    studentProperties.put("status", rsStudent.getString("fldStatus"));
+                    studentProperties.put("grade", rsStudent.getString("fldGrade"));
+                    subItems.add(new StdItem("student", rsStudent.getInt("fldStudentId"), studentProperties));
                 }
 
-                returningList.add(new Course(currentCourseID,
-                                        rsCourse.getString("fldStartDate"),
-                                        rsCourse.getString("fldEndDate"),
-                                        rsCourse.getString("name"),
-                                        rsCourse.getString("fldPoints"),
-                                        rsCourse.getString("fldDescription"),
-                                        studentList));
+                Map<String, String> properties = new HashMap<>();
+                properties.put("id", rsCourse.getString("fldCourseId"));
+                properties.put("startDate", rsCourse.getString("fldStartDate"));
+                properties.put("endDate", rsCourse.getString("fldEndDate"));
+                properties.put("name", rsCourse.getString("name"));
+                properties.put("points", rsCourse.getString("fldPoints"));
+                properties.put("description", rsCourse.getString("fldDescription"));
+
+                returningList.add(new StdItem("course", currentCourseID, properties, subItems));
             }
         } catch (DBConnectionException dbe) {
   		    System.err.println("DATABASE CONNECTION ERROR: " + dbe.getMessage());
@@ -154,8 +149,10 @@ public class SQLStorage implements StudentStorage {
             ResultSet rsCourse = connection.runSelectQuery(query);
             while (rsCourse.next()){
                 int currentCourseID = rsCourse.getInt("fldCourseId");
-                System.out.println("SQLStorage: ping!"+currentCourseID);
-                returningList.add(new Course(currentCourseID, rsCourse.getString("name")));
+                Map<String, String> properties = new HashMap<>();
+                properties.put("id", rsCourse.getString("fldCourseId"));
+                properties.put("name", rsCourse.getString("name"));
+                returningList.add(new StdItem("course", currentCourseID, properties));
             }
         } catch (DBConnectionException dbe) {
   		    System.err.println("DATABASE CONNECTION ERROR: " + dbe.getMessage());

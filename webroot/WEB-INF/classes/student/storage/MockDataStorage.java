@@ -4,8 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
-import student.main.Student;
-import student.main.Course;
+import student.format.StdItem;
 import student.format.Formatable;
 
 public class MockDataStorage implements StudentStorage {
@@ -13,63 +12,94 @@ public class MockDataStorage implements StudentStorage {
     private static List<Formatable> mockDataFullStudent, mockDataStudent, mockDataFullCourse, mockDataCourse;
     static {
         mockDataFullStudent = new ArrayList<Formatable>();
-        mockDataFullStudent.add(new Student(74,
-                                            "Mocke",
-                                            "Datasson",
-                                            "34",
-                                            "Heapen",
-                                            "Ramminnet 123",
+        mockDataFullStudent.add(new StdItem("student",
+                                            74,
                                             new HashMap<String,String>() {{
-                                                    put("mobile", "0707-776655");
-                                                    put("fax", "08-1234567");
+                                                    put("id", "74");
+                                                    put("name", "Mocke");
+                                                    put("surname", "Datasson");
+                                                    put("age", "34");
+                                                    put("postAddress", "Heapen");
+                                                    put("streetAddress", "Ramminnet 123");
                                             }},
-                                            new ArrayList<Map<String,String>>() {{
-                                                    add(new HashMap<String,String>(){{
+                                            new ArrayList<Formatable>() {{
+                                                add(new StdItem("phonenumbers",
+                                                    1,
+                                                    new HashMap<String,String>() {{
+                                                            put("mobile", "0707-776655");
+                                                            put("fax", "08-1234567");
+                                                    }}));
+                                                add(new StdItem("course",
+                                                    8,
+                                                    new HashMap<String,String>(){{
                                                         put("id", "8");
                                                         put("name", "JAVA-101_2016");
                                                         put("status", "complete");
                                                         put("grade", "vg");
-                                                    }});
-                                                    add(new HashMap<String,String>(){{
+                                                    }}));
+                                                add(new StdItem("course",
+                                                    12,
+                                                    new HashMap<String,String>(){{
                                                         put("id", "12");
                                                         put("name", "JAVA-102_2017");
                                                         put("status", "ongoing");
                                                         put("grade", "");
-                                                    }});
+                                                    }}));
                                             }}));
 
         mockDataFullCourse = new ArrayList<Formatable>();
-        mockDataFullCourse.add(new Course(  8,
-                                            "2016-02-21",
-                                            "2016-11-04",
-                                            "JAVA-101_2016",
-                                            "40",
-                                            "Programming with Java",
-                                            new ArrayList<Map<String,String>>() {{
-                                                add(new HashMap<String,String>(){{
-                                                    put("id", "74");
-                                                    put("name", "Mocke");
-                                                    put("surname", "Datasson");
-                                                    put("status", "complete");
-                                                    put("grade", "vg");
-                                                }});
-                                                add(new HashMap<String,String>(){{
-                                                    put("id", "35");
-                                                    put("name", "Datbert");
-                                                    put("surname", "Mockberg");
-                                                    put("status", "complete");
-                                                    put("grade", "g");
-                                                }});
+        mockDataFullCourse.add(new StdItem("course",
+                                            8,
+                                            new HashMap<String,String>() {{
+                                                    put("id", "8");
+                                                    put("startDate", "2016-02-21");
+                                                    put("endDate", "2016-11-04");
+                                                    put("name", "JAVA-101_2016");
+                                                    put("points", "40");
+                                                    put("description", "Programming with Java");
+                                            }},
+                                            new ArrayList<Formatable>() {{
+                                                add(new StdItem("student",
+                                                    74,
+                                                    new HashMap<String,String>(){{
+                                                        put("id", "74");
+                                                        put("name", "Mocke");
+                                                        put("surname", "Datasson");
+                                                        put("status", "complete");
+                                                        put("grade", "vg");
+                                                    }}));
+                                                add(new StdItem("student",
+                                                    35,
+                                                    new HashMap<String,String>(){{
+                                                        put("id", "35");
+                                                        put("name", "Datbert");
+                                                        put("surname", "Mockberg");
+                                                        put("status", "complete");
+                                                        put("grade", "g");
+                                                    }}));
                                             }}));
 
-
         mockDataStudent = new ArrayList<Formatable>();
-        mockDataStudent.add(new Student(74, "Mocke", "Datasson"));
-        mockDataStudent.add(new Student(35, "Datbert", "Mockberg"));
+        mockDataStudent.add(new StdItem("student", 74, new HashMap<String,String>() {{
+            put("id", "74");
+            put("name", "Mocke");
+            put("surname", "Datasson");
+        }}));
+        mockDataStudent.add(new StdItem("student", 35, new HashMap<String,String>() {{
+            put("id", "35");
+            put("name", "Datbert");
+            put("surname", "Mockberg");
+        }}));
 
         mockDataCourse = new ArrayList<Formatable>();
-        mockDataCourse.add(new Course(  8, "JAVA-101_2016"));
-        mockDataCourse.add(new Course(  12, "JAVA-102_2017"));
+        mockDataCourse.add(new StdItem("course", 8, new HashMap<String,String>() {{
+            put("id", "8");
+            put("name", "JAVA-101_2016");
+        }}));
+        mockDataCourse.add(new StdItem("course", 12, new HashMap<String,String>() {{
+            put("id", "12");
+            put("name", "JAVA-102_2017");
+        }}));
     }
     public List<Formatable> getStudent(int id) throws StudentStorageException{
         return mockDataFullStudent;

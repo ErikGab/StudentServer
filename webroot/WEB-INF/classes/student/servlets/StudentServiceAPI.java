@@ -26,7 +26,7 @@ public class StudentServiceAPI extends HttpServlet{
 
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        response.setCharacterEncoding("UTF-8");
 		PrintWriter responseWriter = new PrintWriter(new OutputStreamWriter(response.getOutputStream(), java.nio.charset.StandardCharsets.UTF_8), true);
 		StringBuilder responseBuilder = new StringBuilder();
         String requestFormat = request.getParameter("format");  //xml/json/csv/html/etc
