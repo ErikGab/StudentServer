@@ -6,7 +6,7 @@ import student.databaseconnection.DBConnectionException;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import student.format.StdItem;
 import student.format.Formatable;
 import java.sql.ResultSet;
@@ -37,7 +37,7 @@ public class SQLStorage implements StudentStorage {
                 List<Formatable> subItems = new ArrayList<>();
 
                 ResultSet rsPhone = connection.runSelectQuery("SELECT * FROM tblStudentPhone WHERE fldStudentId = "+currentStudentID);
-                Map<String, String> phonenumbers = new HashMap<>();
+                Map<String, String> phonenumbers = new LinkedHashMap<>();
                 while (rsPhone.next()){
                     phonenumbers.put(rsPhone.getString("fldType"), rsPhone.getString("fldNumber"));
                 }
@@ -45,7 +45,7 @@ public class SQLStorage implements StudentStorage {
 
                 ResultSet rsCourse = connection.runSelectQuery("SELECT * FROM vwGetCoursesForStudent WHERE fldStudentId = "+currentStudentID);
                 while (rsCourse.next()){
-                    Map<String, String> course = new HashMap<>();
+                    Map<String, String> course = new LinkedHashMap<>();
                     course.put("id", rsCourse.getString("fldCourseId"));
                     course.put("name", rsCourse.getString("name"));
                     course.put("status", rsCourse.getString("fldStatus"));
@@ -53,7 +53,7 @@ public class SQLStorage implements StudentStorage {
                     subItems.add(new StdItem("course", rsCourse.getInt("fldCourseId"), course));
                 }
 
-                Map<String, String> properties = new HashMap<>();
+                Map<String, String> properties = new LinkedHashMap<>();
                 properties.put("id", rsStudent.getString("fldStudentId"));
                 properties.put("name", rsStudent.getString("fldName"));
                 properties.put("surname", rsStudent.getString("fldSurName"));
@@ -82,7 +82,7 @@ public class SQLStorage implements StudentStorage {
             ResultSet rsStudent = connection.runSelectQuery(query);
             while (rsStudent.next()){
                 int currentStudentID = rsStudent.getInt("fldStudentId");
-                Map<String, String> properties = new HashMap<>();
+                Map<String, String> properties = new LinkedHashMap<>();
                 properties.put("id", rsStudent.getString("fldStudentId"));
                 properties.put("name", rsStudent.getString("fldName"));
                 properties.put("surname", rsStudent.getString("fldSurName"));
@@ -111,7 +111,7 @@ public class SQLStorage implements StudentStorage {
 
                 ResultSet rsStudent = connection.runSelectQuery("SELECT * FROM vwGetStudentForCourse WHERE fldCourseId = "+currentCourseID);
                 while (rsStudent.next()){
-                    Map<String, String> studentProperties = new HashMap<>();
+                    Map<String, String> studentProperties = new LinkedHashMap<>();
                     studentProperties.put("id", rsStudent.getString("fldStudentId"));
                     studentProperties.put("name", rsStudent.getString("fldName"));
                     studentProperties.put("surname", rsStudent.getString("fldSurName"));
@@ -120,13 +120,13 @@ public class SQLStorage implements StudentStorage {
                     subItems.add(new StdItem("student", rsStudent.getInt("fldStudentId"), studentProperties));
                 }
 
-                Map<String, String> properties = new HashMap<>();
+                Map<String, String> properties = new LinkedHashMap<>();
                 properties.put("id", rsCourse.getString("fldCourseId"));
+                properties.put("name", rsCourse.getString("name"));
+                properties.put("description", rsCourse.getString("fldDescription"));
                 properties.put("startDate", rsCourse.getString("fldStartDate"));
                 properties.put("endDate", rsCourse.getString("fldEndDate"));
-                properties.put("name", rsCourse.getString("name"));
                 properties.put("points", rsCourse.getString("fldPoints"));
-                properties.put("description", rsCourse.getString("fldDescription"));
 
                 returningList.add(new StdItem("course", currentCourseID, properties, subItems));
             }
@@ -149,7 +149,7 @@ public class SQLStorage implements StudentStorage {
             ResultSet rsCourse = connection.runSelectQuery(query);
             while (rsCourse.next()){
                 int currentCourseID = rsCourse.getInt("fldCourseId");
-                Map<String, String> properties = new HashMap<>();
+                Map<String, String> properties = new LinkedHashMap<>();
                 properties.put("id", rsCourse.getString("fldCourseId"));
                 properties.put("name", rsCourse.getString("name"));
                 returningList.add(new StdItem("course", currentCourseID, properties));
