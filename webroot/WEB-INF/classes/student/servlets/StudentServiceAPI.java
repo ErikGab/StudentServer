@@ -10,15 +10,27 @@ import java.sql.*;
 import java.io.*;
 import java.util.*;
 
+
 public class StudentServiceAPI extends HttpServlet{
 
-    private StudentService ss;
+    private static StudentService ss;
+    private static Map<String,APIRequest> apiMethods;
+
 
 	@Override
 	public void init(){
 		try {
 			Class.forName("student.main.StudentService");
             ss = StudentService.getInstance();
+            APIRequest getFullStudentInfo =  (HttpServletRequest r) -> ss.getFullStudentInfo(   parseId(r.getParameter("id"))  ,  r.getParameter("format")  );
+            APIRequest getStudentsByCourse = (HttpServletRequest r) -> ss.getStudentsByCourse(  parseId(r.getParameter("id"))  ,  r.getParameter("format")  );
+            APIRequest getFullCourseInfo = (HttpServletRequest r) -> ss.getFullCourseInfo(  parseId(r.getParameter("id"))  ,  r.getParameter("format")  );
+            APIRequest getCoursesByYear =  (HttpServletRequest r) -> ss.getCoursesByYear(   parseId(r.getParameter("id"))  ,  r.getParameter("format")  );
+            apiMethods = new HashMap<String, APIRequest>();
+            apiMethods.put("student",       getFullStudentInfo);
+            apiMethods.put("studentcourse", getStudentsByCourse);
+            apiMethods.put("course",        getFullCourseInfo);
+            apiMethods.put("courseyear",    getCoursesByYear);
 		} catch (ClassNotFoundException e){
 			System.err.println(e.getMessage());
 		}
@@ -27,73 +39,28 @@ public class StudentServiceAPI extends HttpServlet{
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setCharacterEncoding("UTF-8");
+        //response.setContentType("application/json");
+        //response.setContentType("text/html");
+        //response.setContentType("application/xml");
+        //response.setContentType("text/xml");
 		PrintWriter responseWriter = new PrintWriter(new OutputStreamWriter(response.getOutputStream(), java.nio.charset.StandardCharsets.UTF_8), true);
 		StringBuilder responseBuilder = new StringBuilder();
-        String requestFormat = request.getParameter("format");  //xml/json/csv/html/etc
         String requestType = request.getParameter("type");      //students/courses/phonenumbers
         String requestBy = request.getParameter("by");
-        String requestId = request.getParameter("id");          //studentId/courseId
 
-        if (requestType == null) {
-            responseBuilder.append(getErrorMessage("400"))
-                            .append("'type'");
+        if (requestType==null) { requestType = ""; }
+        if (requestBy==null)   { requestBy = ""; }
+
+        String apiKey = requestType+requestBy;
+        System.out.println("apiKey = "+apiKey);
+
+        if (apiMethods.keySet().contains(apiKey)){
+            responseWriter.println(apiMethods.get(apiKey).respondToRequest(request));
         } else {
-            switch (requestType) {
-                case "student":
-                    responseBuilder.append(studentRequest(requestBy, requestId, requestFormat));
-                    break;
-                case "course":
-                    responseBuilder.append(courseRequest(requestBy, requestId, requestFormat));
-                    break;
-                default:
-                    responseBuilder.append(getErrorMessage("401"))
-                                    .append("type="+requestType);
-                    break;
-            }
+            responseWriter.println(getErrorMessage("400"));
         }
-        responseWriter.println(responseBuilder);
 		responseWriter.close();
 	}
-
-    private String studentRequest(String by, String id, String format){
-        String retrievdInfo;
-        if ( by == null ) {
-            if ( id == null ) {
-                retrievdInfo = getErrorMessage("400")+"id";
-            } else {
-                retrievdInfo = ss.getFullStudentInfo(parseId(id), format);
-            }
-        } else if ( by.equals("course") ) {
-            if ( id == null ) {
-                retrievdInfo = getErrorMessage("400")+"id";
-            } else {
-                retrievdInfo = ss.getStudentsByCourse(parseId(id), format);
-            }
-        } else  {
-            retrievdInfo = getErrorMessage("401")+"by="+by;
-        }
-        return retrievdInfo;
-    }
-
-    private String courseRequest(String by, String id, String format){
-        String retrievdInfo;
-        if ( by == null ) {
-            if ( id == null ) {
-                retrievdInfo = getErrorMessage("400")+"id";
-            } else {
-                retrievdInfo = ss.getFullCourseInfo(parseId(id), format);
-            }
-        } else if ( by.equals("year") ) {
-            if ( id == null ) {
-                retrievdInfo = getErrorMessage("400")+"id";
-            } else {
-                retrievdInfo = ss.getCoursesByYear(parseId(id), format);
-            }
-        } else  {
-            retrievdInfo = getErrorMessage("401")+"by="+by;
-        }
-        return retrievdInfo;
-    }
 
     private String getErrorMessage(String code){
         String message;
