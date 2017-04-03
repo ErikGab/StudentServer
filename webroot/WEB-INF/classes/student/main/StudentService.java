@@ -34,74 +34,80 @@ public class StudentService {
 
     private StudentService(){};
 
-    public String getFullStudentInfo(int id, String format){
-        String response;
-        List<Formatable> students;
+    public String getFullStudentInfo(HttpServletRequest request, HttpServletResponse response){
         try {
-            students = storage.getStudent(id);
-            response = FormatService.formatList(students, format);
+            List<Formatable> students;
+            students = storage.getStudent(parseId(request.getParameter("id")));
+            return formatResponse(students, request.getParameter("format"), response);
         } catch (StudentStorageException sse){
             System.err.println(sse.getMessage());
-            response = getErrorMessage(666);
-        } catch (FormatException fe){
-            System.err.println(fe.getMessage());
-            response = getErrorMessage(666);
+            return getErrorMessage(666);
         }
-        return response;
     }
 
-    public String getStudentsByCourse(int id, String format){
-        String response;
-        List<Formatable> students;
+    public String getStudentsByCourse(HttpServletRequest request, HttpServletResponse response){
         try {
-            students = storage.getStudentsByCourse(id);
-            response = FormatService.formatList(students, format);
+            List<Formatable> students;
+            students = storage.getStudentsByCourse(parseId(request.getParameter("id")));
+            return formatResponse(students, request.getParameter("format"), response);
         } catch (StudentStorageException sse){
             System.err.println(sse.getMessage());
-            response = getErrorMessage(666);
-        } catch (FormatException fe){
-            System.err.println(fe.getMessage());
-            response = getErrorMessage(666);
+            return getErrorMessage(666);
         }
-        return response;
     }
 
-    public String getFullCourseInfo(int id, String format){
-        String response;
-        List<Formatable> courses;
+    public String getFullCourseInfo(HttpServletRequest request, HttpServletResponse response){
         try {
-            courses = storage.getCourse(id);
-            response = FormatService.formatList(courses, format);
+            List<Formatable> courses;
+            courses = storage.getCourse(parseId(request.getParameter("id")));
+            return formatResponse(courses, request.getParameter("format"), response);
         } catch (StudentStorageException sse){
             System.err.println(sse.getMessage());
-            response = getErrorMessage(666);
-        } catch (FormatException fe){
-            System.err.println(fe.getMessage());
-            response = getErrorMessage(666);
+            return getErrorMessage(666);
         }
-        return response;
     }
 
-    public String getCoursesByYear(int id, String format){
-        String response;
-        List<Formatable> courses;
+    public String getCoursesByYear(HttpServletRequest request, HttpServletResponse response){
         try {
-            courses = storage.getCoursesByYear(id);
-            response = FormatService.formatList(courses, format);
+            List<Formatable> courses;
+            courses = storage.getCoursesByYear(parseId(request.getParameter("id")));
+            return formatResponse(courses, request.getParameter("format"), response);
         } catch (StudentStorageException sse){
             System.err.println(sse.getMessage());
-            response = getErrorMessage(666);
-        } catch (FormatException fe){
-            System.err.println(fe.getMessage());
-            response = getErrorMessage(666);
+            return getErrorMessage(666);
         }
-        return response;
     }
-
 
     //obvious placeholder is obvious
     private String getErrorMessage(int code){
         return "ERROR 123: Något är knas";
     }
+
+    private String formatResponse(List<Formatable> list, String format, HttpServletResponse response){
+        String responseData;
+        try {
+            responseData = FormatService.formatList(list, format);
+            response.setContentType(FormatService.getContentType(format));
+        } catch (FormatException fe){
+            System.err.println(fe.getMessage());
+            responseData = getErrorMessage(666);
+        }
+        return responseData;
+    }
+
+    private int parseId(String stringId){
+        int intId;
+        if (stringId == null || stringId.equals("all")){
+            intId = 0;
+        } else {
+            try {
+                intId = Integer.parseInt(stringId);
+            } catch (NumberFormatException nfe){
+                intId = 0;
+            }
+        }
+        return intId;
+    }
+
 
 }

@@ -30,12 +30,12 @@ public class FormatFactory {
     }
 
     public static Format getFormat(String userRequest) throws FormatException{
-        System.out.println(userRequest);
-        if (formatsMap.containsKey(userRequest)){
-            return formatsMap.get(userRequest);
+        String format = String.valueOf(userRequest);
+        System.out.println(format);
+        if (formatsMap.containsKey(format)){
+            return formatsMap.get(format);
         } else {
             throw new FormatException("Format not supported.");
         }
     }
-
 }

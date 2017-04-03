@@ -22,15 +22,15 @@ public class StudentServiceAPI extends HttpServlet{
 		try {
 			Class.forName("student.main.StudentService");
             ss = StudentService.getInstance();
-            APIRequest getFullStudentInfo =  (HttpServletRequest r) -> ss.getFullStudentInfo(   parseId(r.getParameter("id"))  ,  r.getParameter("format")  );
-            APIRequest getStudentsByCourse = (HttpServletRequest r) -> ss.getStudentsByCourse(  parseId(r.getParameter("id"))  ,  r.getParameter("format")  );
-            APIRequest getFullCourseInfo = (HttpServletRequest r) -> ss.getFullCourseInfo(  parseId(r.getParameter("id"))  ,  r.getParameter("format")  );
-            APIRequest getCoursesByYear =  (HttpServletRequest r) -> ss.getCoursesByYear(   parseId(r.getParameter("id"))  ,  r.getParameter("format")  );
+            APIRequest getFullStudentInfo =  (HttpServletRequest request, HttpServletResponse response) -> ss.getFullStudentInfo(request, response);
+            APIRequest getStudentsByCourse = (HttpServletRequest request, HttpServletResponse response) -> ss.getStudentsByCourse(request, response);
+            APIRequest getFullCourseInfo =   (HttpServletRequest request, HttpServletResponse response) -> ss.getFullCourseInfo(request, response);
+            APIRequest getCoursesByYear =    (HttpServletRequest request, HttpServletResponse response) -> ss.getCoursesByYear(request, response);
             apiMethods = new HashMap<String, APIRequest>();
-            apiMethods.put("student",       getFullStudentInfo);
-            apiMethods.put("studentcourse", getStudentsByCourse);
-            apiMethods.put("course",        getFullCourseInfo);
-            apiMethods.put("courseyear",    getCoursesByYear);
+            apiMethods.put("student-null",   getFullStudentInfo);
+            apiMethods.put("student-course", getStudentsByCourse);
+            apiMethods.put("course-null",    getFullCourseInfo);
+            apiMethods.put("course-year",    getCoursesByYear);
 		} catch (ClassNotFoundException e){
 			System.err.println(e.getMessage());
 		}
@@ -39,23 +39,12 @@ public class StudentServiceAPI extends HttpServlet{
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setCharacterEncoding("UTF-8");
-        //response.setContentType("application/json");
-        //response.setContentType("text/html");
-        //response.setContentType("application/xml");
-        //response.setContentType("text/xml");
 		PrintWriter responseWriter = new PrintWriter(new OutputStreamWriter(response.getOutputStream(), java.nio.charset.StandardCharsets.UTF_8), true);
-		StringBuilder responseBuilder = new StringBuilder();
-        String requestType = request.getParameter("type");      //students/courses/phonenumbers
-        String requestBy = request.getParameter("by");
-
-        if (requestType==null) { requestType = ""; }
-        if (requestBy==null)   { requestBy = ""; }
-
-        String apiKey = requestType+requestBy;
+        String apiKey = String.valueOf(request.getParameter("type"))+"-"+String.valueOf(request.getParameter("by"));
         System.out.println("apiKey = "+apiKey);
 
         if (apiMethods.keySet().contains(apiKey)){
-            responseWriter.println(apiMethods.get(apiKey).respondToRequest(request));
+            responseWriter.println(apiMethods.get(apiKey).respondToRequest(request, response));
         } else {
             responseWriter.println(getErrorMessage("400"));
         }
@@ -79,18 +68,5 @@ public class StudentServiceAPI extends HttpServlet{
 
     }
 
-    private int parseId(String stringId){
-        int intId;
-        if (stringId.equals("all")){
-            intId = 0;
-        } else {
-            try {
-                intId = Integer.parseInt(stringId);
-            } catch (NumberFormatException nfe){
-                intId = 0;
-            }
-        }
-        return intId;
-    }
 
 }
