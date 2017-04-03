@@ -1,6 +1,6 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
- <entry key="400">Error 400. Bad Request. Invalid parameters </entry>
- <entry key="401">Error 401. Bad Request. Parameter value unrecognized </entry>
+ <entry key="400">Bad Request. Invalid parameters </entry>
+ <entry key="401">Bad Request. Parameter value unrecognized </entry>
  <entry key="200">Alles güt.</entry>
 </properties>
