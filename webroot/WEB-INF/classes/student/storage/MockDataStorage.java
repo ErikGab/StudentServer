@@ -9,6 +9,8 @@ import student.format.Formatable;
 
 public class MockDataStorage implements StudentStorage {
 
+    private MockDataStorage(){};
+
     private static List<Formatable> mockDataFullStudent, mockDataStudent, mockDataFullCourse, mockDataCourse;
     static {
         mockDataFullStudent = new ArrayList<Formatable>();
@@ -100,6 +102,7 @@ public class MockDataStorage implements StudentStorage {
             put("id", "12");
             put("name", "JAVA-102_2017");
         }}));
+        StorageFactory.register("MockData", new MockDataStorage());
     }
     public List<Formatable> getStudent(int id) throws StudentStorageException{
         return mockDataFullStudent;

@@ -20,7 +20,8 @@ public class StudentService {
     static {
         instance = new StudentService();
         try {
-            storage = StorageFactory.getStorage();
+            //2DO remove hardcoding of SQL. make -D input set default storagetype
+            storage = StorageFactory.getStorage("SQL");
         } catch (StudentStorageException sse){
             System.err.println(sse.getMessage());
         }
@@ -123,6 +124,15 @@ public class StudentService {
             }
         }
         return intId;
+    }
+
+    //2DO this is never called. Should an APImethod be added to reach this?
+    private void changeStorage(String type){
+        try {
+            storage = StorageFactory.getStorage(type);
+        } catch (StudentStorageException sse){
+            System.err.println(sse.getMessage());
+        }
     }
 
 

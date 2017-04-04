@@ -149,63 +149,63 @@ VALUES
 ("2017-02-23", "2017-10-19", 7);
 
 
-INSERT INTO tblStudent (fldName, fldSurName, fldBirthdate, fldPostAddress, fldStreetAdress)
-VALUES
-("Hampus","Andersson", "1987-03-05","Rävlanda",  "Bullgången 34"),
-("Lina",  "Svensson",  "1985-05-07","Styrsö",    "Bryggstigen 4"),
-("Malte", "Duggesson", "1981-01-11","Mölnlycke", "Vörtvägen 7"),
-("Ture",  "Sventon",   "1979-12-02","Kungsbacka","Semelgången 1"),
-("Ida",   "Augustsson","1992-08-08","Surte",     "Kebabvägen 55"),
-("Greta", "Andersson", "1989-07-03","Öltorp",    "Mesksmasket 19"),
-("Folke", "Falconsson","1957-11-02","Bärslanda", "Sexpacket 28"),
-("Gärd",  "Ninjasson", "1997-03-05","Torslanda", "Kustvägen 4"),
-("Nisse", "Andersson", "1987-03-05","Rävlanda",  "Bullgången 34"),
-("Tony",  "Iommi",     "1948-02-19","Rifftorp",  "Basgången 666"),
-("Ian",   "Anderson",  "1947-08-10","Norje",     "Festivalängen 1");
-
-
-INSERT INTO tblStudentPhone (fldStudentId, fldNumber, fldType, fldPrimary)
-VALUES
-(1,"0701-1234567","mobile","primary"),
-(2,"0708-9876543","mobile","primary"),
-(3,"0706-5647389","mobile", null),
-(4,"0701-3489654","mobile", "primary"),
-(4,"052-819474"  ,"home",   null),
-(5,"0706-2315367", null,    null),
-(7,"031-9876511", "home",   "primary"),
-(7,"0708-1122333","mobile", null),
-(8,"0701-7668883","mobile", "primary"),
-(9,"0710-1290784","mobile", "primary"),
-(11,"0510-212112","home",   null),
-(11,"0703-987654","mobile", null);
-
-
-INSERT INTO tblStudentCourse (fldStudentId, fldCourseId, fldStatus, fldGrade, fldComment)
-VALUES
-( 1,7 ,"complete", "g",  null),
-( 1,8 ,"ongoing",  null, null),
-( 2,7 ,"complete", "vg", null),
-( 2,8 ,"ongoing",  null, null),
-( 3,7 ,"ongoing",  null, null),
-( 3,9 ,null,       null, null),
-( 4,7 ,"complete", "vg", null),
-( 4,8 ,"complete", "g",  null),
-( 4,9 ,"ongoing",  null, null),
-( 4,10,"ongoing",  null, null),
-( 5,10,"ongoing",  null, null),
-( 6,10,"ongoing",  null, null),
-( 7,7, "complete", "vg", null),
-( 7,10,"ongoing",  null, null),
-( 8,11,"complete", "g",  null),
-( 8,12,"ongoing",  null, null),
-( 9,11,"complete", "g",  null),
-( 9,12,"complete", "ig", null),
-(10,11,"complete", "vg", null),
-(10,12,"complete", "vg", null),
-(10,13,"complete", "vg", null),
-(11,11,"complete", "vg", null),
-(11,12,"complete", "vg", null),
-(11,13,"complete", "vg", null);
+-- INSERT INTO tblStudent (fldName, fldSurName, fldBirthdate, fldPostAddress, fldStreetAdress)
+-- VALUES
+-- ("Hampus","Andersson", "1987-03-05","Rävlanda",  "Bullgången 34"),
+-- ("Lina",  "Svensson",  "1985-05-07","Styrsö",    "Bryggstigen 4"),
+-- ("Malte", "Duggesson", "1981-01-11","Mölnlycke", "Vörtvägen 7"),
+-- ("Ture",  "Sventon",   "1979-12-02","Kungsbacka","Semelgången 1"),
+-- ("Ida",   "Augustsson","1992-08-08","Surte",     "Kebabvägen 55"),
+-- ("Greta", "Andersson", "1989-07-03","Öltorp",    "Mesksmasket 19"),
+-- ("Folke", "Falconsson","1957-11-02","Bärslanda", "Sexpacket 28"),
+-- ("Gärd",  "Ninjasson", "1997-03-05","Torslanda", "Kustvägen 4"),
+-- ("Nisse", "Andersson", "1987-03-05","Rävlanda",  "Bullgången 34"),
+-- ("Tony",  "Iommi",     "1948-02-19","Rifftorp",  "Basgången 666"),
+-- ("Ian",   "Anderson",  "1947-08-10","Norje",     "Festivalängen 1");
+--
+--
+-- INSERT INTO tblStudentPhone (fldStudentId, fldNumber, fldType, fldPrimary)
+-- VALUES
+-- (1,"0701-1234567","mobile","primary"),
+-- (2,"0708-9876543","mobile","primary"),
+-- (3,"0706-5647389","mobile", null),
+-- (4,"0701-3489654","mobile", "primary"),
+-- (4,"052-819474"  ,"home",   null),
+-- (5,"0706-2315367", null,    null),
+-- (7,"031-9876511", "home",   "primary"),
+-- (7,"0708-1122333","mobile", null),
+-- (8,"0701-7668883","mobile", "primary"),
+-- (9,"0710-1290784","mobile", "primary"),
+-- (11,"0510-212112","home",   null),
+-- (11,"0703-987654","mobile", null);
+--
+--
+-- INSERT INTO tblStudentCourse (fldStudentId, fldCourseId, fldStatus, fldGrade, fldComment)
+-- VALUES
+-- ( 1,7 ,"complete", "g",  null),
+-- ( 1,8 ,"ongoing",  null, null),
+-- ( 2,7 ,"complete", "vg", null),
+-- ( 2,8 ,"ongoing",  null, null),
+-- ( 3,7 ,"ongoing",  null, null),
+-- ( 3,9 ,null,       null, null),
+-- ( 4,7 ,"complete", "vg", null),
+-- ( 4,8 ,"complete", "g",  null),
+-- ( 4,9 ,"ongoing",  null, null),
+-- ( 4,10,"ongoing",  null, null),
+-- ( 5,10,"ongoing",  null, null),
+-- ( 6,10,"ongoing",  null, null),
+-- ( 7,7, "complete", "vg", null),
+-- ( 7,10,"ongoing",  null, null),
+-- ( 8,11,"complete", "g",  null),
+-- ( 8,12,"ongoing",  null, null),
+-- ( 9,11,"complete", "g",  null),
+-- ( 9,12,"complete", "ig", null),
+-- (10,11,"complete", "vg", null),
+-- (10,12,"complete", "vg", null),
+-- (10,13,"complete", "vg", null),
+-- (11,11,"complete", "vg", null),
+-- (11,12,"complete", "vg", null),
+-- (11,13,"complete", "vg", null);
 
 -- CREATE VIEW vwAllActiveStudents
 -- AS

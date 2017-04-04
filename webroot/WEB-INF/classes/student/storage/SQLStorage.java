@@ -14,10 +14,13 @@ import java.sql.SQLException;
 
 public class SQLStorage implements StudentStorage {
 
+    private SQLStorage(){};
+
     private static DatabaseConnection connection;
     static {
         try {
             connection = DatabaseConnectionFactory.getDatabaseConnection();
+            StorageFactory.register("SQL", new SQLStorage());
         } catch (DBConnectionException dbce){
             System.err.println(dbce.getMessage());
         }
