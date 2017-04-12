@@ -33,7 +33,6 @@ public class StudentServiceAPI extends HttpServlet{
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) {
         try {
-            response.setCharacterEncoding("UTF-8");
             PrintWriter responseWriter = new PrintWriter(new OutputStreamWriter(response.getOutputStream(), java.nio.charset.StandardCharsets.UTF_8), true);
             String apiKey = String.valueOf(request.getParameter("type"))+"-"+String.valueOf(request.getParameter("by"));
             System.out.println("apiKey = "+apiKey);

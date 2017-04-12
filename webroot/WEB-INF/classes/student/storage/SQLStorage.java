@@ -62,7 +62,7 @@ public class SQLStorage implements StudentStorage {
                 properties.put("surname", rsStudent.getString("fldSurName"));
                 properties.put("age", rsStudent.getString("age"));
                 properties.put("postAddress", rsStudent.getString("fldPostAddress"));
-                properties.put("streetAdress", rsStudent.getString("fldStreetAdress"));
+                properties.put("streetAddress", rsStudent.getString("fldStreetAddress"));
 
                 returningList.add(new StdItem("student", currentStudentID, properties, subItems));
             }
@@ -79,7 +79,7 @@ public class SQLStorage implements StudentStorage {
         List<Formatable> returningList = new ArrayList<>();
         String query;
 
-        if (id == 0) {  query = "SELECT * FROM vwGetStudentsByCourse"; }
+        if (id == 0) {  query = "SELECT DISTINCT * FROM vwGetStudentsByAllCourse"; }
         else {          query = "SELECT * FROM vwGetStudentsByCourse WHERE fldCourseId = '"+id+"'"; }
         try {
             ResultSet rsStudent = connection.runSelectQuery(query);

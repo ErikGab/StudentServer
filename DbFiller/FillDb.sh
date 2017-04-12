@@ -1,25 +1,25 @@
 #!/bin/bash
 
-echo "INSERT INTO tblStudent (fldName, fldSurName, fldBirthdate, fldPostAddress, fldStreetAdress)"
+echo "INSERT INTO tblStudent (fldName, fldSurName, fldBirthdate, fldPostAddress, fldStreetAddress)"
 echo "VALUES"
 student=0
 studentTarget=100
 while [ $student -lt $studentTarget ]
 do
     echo -n "(\""
-    echo -n $(shuf -n 1 < name | head -1)
+    echo -n $(shuf -n 1 < name )
     echo -n "\", \""
-    echo -n $(shuf -n 1 < surname | head -1)
+    echo -n $(shuf -n 1 < surname )
     echo -n "\", \""
     echo -n $(shuf -i 1970-1998 -n 1)
     echo -n "-"
-    echo -n $(shuf -i 01-12 -n 1)
+    echo -n $(shuf -n 1 < month )
     echo -n "-"
-    echo -n $(shuf -i 01-30 -n 1)
+    echo -n $(shuf -n 1 < day )
     echo -n "\", \""
-    echo -n $(shuf -n 1 < postAddress | head -1)
+    echo -n $(shuf -n 1 < postAddress )
     echo -n "\", \""
-    echo -n $(shuf -n 1 < streetAddress | head -1)
+    echo -n $(shuf -n 1 < streetAddress )
     echo "\"),"
     let student=student+1
 done
@@ -29,7 +29,7 @@ done
 
 echo -e "\nINSERT INTO tblStudentPhone (fldStudentId, fldNumber, fldType, fldPrimary)"
 echo "VALUES"
-student=0
+student=1
 while [ $student -lt $studentTarget ]
 do
     seed=$(echo "${RANDOM: -1}")
@@ -55,8 +55,8 @@ done
 
 echo -e "\nINSERT INTO tblStudentCourse (fldStudentId, fldCourseId, fldStatus, fldGrade, fldComment)"
 echo "VALUES"
-student=0
-course=0
+student=1
+course=1
 courseTarget=20
 while [ $course -lt $courseTarget ]
 do
@@ -65,14 +65,14 @@ do
     echo " " > tmpList
     while [ $studentsInThisCourse -lt $targetForThisCourse ]
     do
-        studentSeed=$(shuf -i 0-$studentTarget -n 1)
+        studentSeed=$(shuf -i 1-$studentTarget -n 1)
         grep -x "$studentSeed" < tmpList > /dev/null
         if [ $? != 0 ]; then
             echo -n "($studentSeed, $course, "
             if [ $course -lt 14 ]; then
-                echo -n $(shuf -n 1 < statusGradePast | head -1)
+                echo -n $(shuf -n 1 < statusGradePast )
             else
-                echo -n $(shuf -n 1 < statusGradeCurrent | head -1)
+                echo -n $(shuf -n 1 < statusGradeCurrent )
             fi
             echo ", null),"
             echo $studentSeed >> tmpList

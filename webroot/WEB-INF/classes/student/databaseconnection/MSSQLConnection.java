@@ -19,18 +19,18 @@ public class MSSQLConnection implements DatabaseConnection {
     String databaseUserName = "JavaLogin";
     String databasePassword = "Losen123";
 
-		static {
-			try {
-				Properties connectionProperties = new Properties();
-				connectionProperties.loadFromXML(new FileInputStream("src/main/java/app/dbconn/availibleConnections.xml"));
-				String urlFromFile = connectionProperties.getProperty("mssql").split("::")[1];
-				DatabaseConnectionFactory.registerDriver("mssql", new MSSQLConnection(urlFromFile));
-			} catch (FileNotFoundException e) {
-				System.err.println("availibleConnections.xml settings file missing.");
-			} catch (IOException ie) {
-				System.err.println(ie);
-			}
+	static {
+		try {
+			Properties connectionProperties = new Properties();
+			connectionProperties.loadFromXML(new FileInputStream("src/main/java/app/dbconn/availibleConnections.xml"));
+			String urlFromFile = connectionProperties.getProperty("mssql").split("::")[1];
+			DatabaseConnectionFactory.registerDriver("mssql", new MSSQLConnection(urlFromFile));
+		} catch (FileNotFoundException e) {
+			System.err.println("availibleConnections.xml settings file missing.");
+		} catch (IOException ie) {
+			System.err.println(ie);
 		}
+	}
 
 	public MSSQLConnection(String database, String host, String instance, String port){
 		url = "jdbc:sqlserver://"+host+"\\"+instance+":"+port+";databaseName="+database+"";

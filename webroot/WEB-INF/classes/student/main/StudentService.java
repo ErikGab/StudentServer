@@ -105,6 +105,7 @@ public class StudentService {
             responseData = FormatService.formatList(list, format);
             response.setContentType(FormatService.getContentType(format));
             response.setStatus(response.SC_OK);
+            response.setCharacterEncoding("UTF-8");
         } catch (FormatException fe){
             System.err.println(fe.getMessage());
             responseData = getErrorMessage(666);

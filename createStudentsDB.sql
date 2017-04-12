@@ -30,7 +30,7 @@ fldName nvarchar(20),
 fldSurName nvarchar(40),
 fldBirthdate date,
 fldPostAddress nvarchar(20),
-fldStreetAdress nvarchar(40),
+fldStreetAddress nvarchar(40),
 FOREIGN KEY (fldStudentId) REFERENCES tblStudentCourse(fldStudentId));
 
 CREATE TABLE tblStudentPhone
@@ -52,6 +52,14 @@ SELECT  sc.fldCourseId,
 FROM tblStudentCourse AS sc LEFT JOIN tblStudent AS s
 ON s.fldStudentId = sc.fldStudentId;
 
+CREATE VIEW vwGetStudentsByAllCourse
+AS
+SELECT  s.fldStudentId,
+        s.fldName,
+        s.fldSurName
+FROM tblStudentCourse AS sc LEFT JOIN tblStudent AS s
+ON s.fldStudentId = sc.fldStudentId;
+
 CREATE VIEW vwGetStudent
 AS
 SELECT  s.fldStudentId,
@@ -59,7 +67,7 @@ SELECT  s.fldStudentId,
         s.fldSurName,
         ((strftime('%Y', 'now') - strftime('%Y', s.fldBirthdate)) - (strftime('%m-%d', 'now') < strftime('%m-%d', s.fldBirthdate))) AS "age",
         s.fldPostAddress,
-        s.fldStreetAdress,
+        s.fldStreetAddress,
         sp.fldNumber
 FROM tblStudent AS s LEFT JOIN tblStudentPhone AS sp
 ON s.fldStudentId = sp.fldStudentId

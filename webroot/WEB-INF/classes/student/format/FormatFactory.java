@@ -29,13 +29,13 @@ public class FormatFactory {
         formatsMap.put(key,formatInstance);
     }
 
-    public static Format getFormat(String userRequest) throws FormatException{
-        String format = String.valueOf(userRequest);
+    public static Format getFormat(String requestedFormat) throws FormatException{
+        String format = String.valueOf(requestedFormat);
         System.out.println(format);
         if (formatsMap.containsKey(format)){
             return formatsMap.get(format);
         } else {
-            throw new FormatException("Format not supported.");
+            throw new FormatException("Format not supported: "+format);
         }
     }
 }

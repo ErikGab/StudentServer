@@ -34,8 +34,7 @@ public class DatabaseConnectionFactory {
 	}
 
 	public static void registerDriver(String drivername, DatabaseConnection connection){
-		//System.out.println("Factory: Registering : " + drivername);
-		System.out.println("New connection registerd: " + drivername);
+		System.out.println("New DB connection registerd: " + drivername);
 		connections.put(drivername, connection);
 	}
 
@@ -44,11 +43,11 @@ public class DatabaseConnectionFactory {
 	public static DatabaseConnection getDatabaseConnection() throws DBConnectionException{
 		if (connections.containsKey(driver)){
 			System.out.println("Returning requested driver: " + driver);
-      return connections.get(driver);
+      		return connections.get(driver);
 		} else if (connections.containsKey(DEFAULTDRIVER)){
 			System.err.println(driver + " driver not found.\nReturning default driver: " + DEFAULTDRIVER);
-      return connections.get(DEFAULTDRIVER);
-    } else {
+      		return connections.get(DEFAULTDRIVER);
+    	} else {
 			System.err.println("No suitable driver found: " + driver);
 			throw new DBConnectionException("No " + driver + " support availible.");
 		}
