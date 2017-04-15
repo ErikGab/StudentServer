@@ -5,7 +5,8 @@ import java.util.*;
 
 public class DatabaseConnectionFactory {
 
-	static private final String CONNECTIONS_XML = "webroot/WEB-INF/classes/student/databaseconnection/availibleConnections.xml";
+	static private final String CONNECTIONS_XML =
+          "webroot/WEB-INF/classes/student/databaseconnection/availibleConnections.xml";
 	static private final String DEFAULTDRIVER = "sqlite";
 	static private String driver;
 	static private Map<String, DatabaseConnection> connections = new HashMap<>();
@@ -16,11 +17,11 @@ public class DatabaseConnectionFactory {
 			for(String connection : connectionProperties.stringPropertyNames()){
 	 			String className = connectionProperties.getProperty(connection).split("::")[0];
 				if (connectionProperties.getProperty(connection).split("::")[2].equals("true")) {
-					//System.out.println("DBCFactory: Trying to load :" + className);
 					System.out.println(connection + " connection found, loading class: " + className);
-		 			try{
+		 			try {
+            //System.out.println("DBCFactory: Trying to load :" + className);
 		 				Class.forName(className);
-		 			}catch(ClassNotFoundException cnfe){
+		 			} catch(ClassNotFoundException cnfe) {
 						System.err.println(cnfe.getMessage());
 					}
 				}
@@ -38,16 +39,16 @@ public class DatabaseConnectionFactory {
 		connections.put(drivername, connection);
 	}
 
-	private DatabaseConnectionFactory(){};
+	private DatabaseConnectionFactory() {};
 
-	public static DatabaseConnection getDatabaseConnection() throws DBConnectionException{
-		if (connections.containsKey(driver)){
+	public static DatabaseConnection getDatabaseConnection() throws DBConnectionException {
+		if (connections.containsKey(driver)) {
 			System.out.println("Returning requested driver: " + driver);
-      		return connections.get(driver);
-		} else if (connections.containsKey(DEFAULTDRIVER)){
+      return connections.get(driver);
+		} else if (connections.containsKey(DEFAULTDRIVER)) {
 			System.err.println(driver + " driver not found.\nReturning default driver: " + DEFAULTDRIVER);
-      		return connections.get(DEFAULTDRIVER);
-    	} else {
+      return connections.get(DEFAULTDRIVER);
+    } else {
 			System.err.println("No suitable driver found: " + driver);
 			throw new DBConnectionException("No " + driver + " support availible.");
 		}

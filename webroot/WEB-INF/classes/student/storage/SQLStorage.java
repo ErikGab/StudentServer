@@ -39,14 +39,17 @@ public class SQLStorage implements StudentStorage {
                 int currentStudentID = rsStudent.getInt("fldStudentId");
                 List<Formatable> subItems = new ArrayList<>();
 
-                ResultSet rsPhone = connection.runSelectQuery("SELECT * FROM tblStudentPhone WHERE fldStudentId = "+currentStudentID);
+                ResultSet rsPhone = connection.runSelectQuery(
+                        "SELECT * FROM tblStudentPhone WHERE fldStudentId = "+currentStudentID);
                 Map<String, String> phonenumbers = new LinkedHashMap<>();
                 while (rsPhone.next()){
                     phonenumbers.put(rsPhone.getString("fldType"), rsPhone.getString("fldNumber"));
                 }
                 subItems.add(new StdItem("phonenumbers", 1, phonenumbers));
 
-                ResultSet rsCourse = connection.runSelectQuery("SELECT * FROM vwGetCoursesForStudent WHERE fldStudentId = "+currentStudentID);
+                ResultSet rsCourse = connection.runSelectQuery(
+                        "SELECT * FROM vwGetCoursesForStudent WHERE fldStudentId = " +
+                        currentStudentID);
                 while (rsCourse.next()){
                     Map<String, String> course = new LinkedHashMap<>();
                     course.put("id", rsCourse.getString("fldCourseId"));
@@ -80,7 +83,8 @@ public class SQLStorage implements StudentStorage {
         String query;
 
         if (id == 0) {  query = "SELECT DISTINCT * FROM vwGetStudentsByAllCourse"; }
-        else {          query = "SELECT * FROM vwGetStudentsByCourse WHERE fldCourseId = '"+id+"'"; }
+        else {          query = "SELECT * FROM vwGetStudentsByCourse WHERE fldCourseId = '"
+                        + id + "'"; }
         try {
             ResultSet rsStudent = connection.runSelectQuery(query);
             while (rsStudent.next()){
@@ -112,7 +116,8 @@ public class SQLStorage implements StudentStorage {
                 int currentCourseID = rsCourse.getInt("fldCourseId");
                 List<Formatable> subItems = new ArrayList<>();
 
-                ResultSet rsStudent = connection.runSelectQuery("SELECT * FROM vwGetStudentForCourse WHERE fldCourseId = "+currentCourseID);
+                ResultSet rsStudent = connection.runSelectQuery(
+                        "SELECT * FROM vwGetStudentForCourse WHERE fldCourseId = "+currentCourseID);
                 while (rsStudent.next()){
                     Map<String, String> studentProperties = new LinkedHashMap<>();
                     studentProperties.put("id", rsStudent.getString("fldStudentId"));
@@ -120,7 +125,8 @@ public class SQLStorage implements StudentStorage {
                     studentProperties.put("surname", rsStudent.getString("fldSurName"));
                     studentProperties.put("status", rsStudent.getString("fldStatus"));
                     studentProperties.put("grade", rsStudent.getString("fldGrade"));
-                    subItems.add(new StdItem("student", rsStudent.getInt("fldStudentId"), studentProperties));
+                    subItems.add(new StdItem("student", rsStudent.getInt("fldStudentId"),
+                            studentProperties));
                 }
 
                 Map<String, String> properties = new LinkedHashMap<>();

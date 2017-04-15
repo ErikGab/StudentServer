@@ -28,7 +28,8 @@ public class PGSQLConnection implements DatabaseConnection {
 	static {
 		try {
 			Properties connectionProperties = new Properties();
-			connectionProperties.loadFromXML(new FileInputStream("src/main/java/app/dbconn/availibleConnections.xml"));
+			connectionProperties.loadFromXML(
+              new FileInputStream("src/main/java/app/dbconn/availibleConnections.xml"));
 			String urlFromFile = connectionProperties.getProperty("mssql").split("::")[1];
 			DatabaseConnectionFactory.registerDriver("mssql", new PGSQLConnection(urlFromFile));
 		} catch (FileNotFoundException e) {
@@ -38,28 +39,29 @@ public class PGSQLConnection implements DatabaseConnection {
 		}
 	}
 
-	public PGSQLConnection(String database, String host, String instance, String port){
-		url = "jdbc:sqlserver://"+host+"\\"+instance+":"+port+";databaseName="+database+"";
-		getConnected();
-	}
-	public PGSQLConnection(String url){
-		this.url = "jdbc:sqlserver:"+url;
+	public PGSQLConnection(String database, String host, String instance, String port) {
+		url = "jdbc:sqlserver://" + host + "\\" + instance + ":" + port + ";databaseName=" + database;
 		getConnected();
 	}
 
-	private void getConnected(){
+	public PGSQLConnection(String url) {
+		this.url = "jdbc:sqlserver:" + url;
+		getConnected();
+	}
+
+	private void getConnected() {
 		try{
 			Class.forName(driver).newInstance();
-	        conn = DriverManager.getConnection(url, databaseUserName, databasePassword);
-		} catch (Exception e){
+	    conn = DriverManager.getConnection(url, databaseUserName, databasePassword);
+		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
 		}
 	}
 
-	public ResultSet runSelectQuery(String query)throws DBConnectionException {
+	public ResultSet runSelectQuery(String query) throws DBConnectionException {
 	    try {
 	        stmt = conn.createStatement();
-	        rs = null;
+	        rs = null; //Behövs denna??
 	        rs = stmt.executeQuery(query);
 	    } catch (Exception e) {
 	        throw new DBConnectionException(e.getMessage());
@@ -67,7 +69,7 @@ public class PGSQLConnection implements DatabaseConnection {
 	    return rs;
 	}
 
-public void runNonSelectQuery(String query)throws DBConnectionException {
+public void runNonSelectQuery(String query) throws DBConnectionException {
 	    try {
 	        stmt = conn.createStatement();
 	        stmt.executeUpdate(query);

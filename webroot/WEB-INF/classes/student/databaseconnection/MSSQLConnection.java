@@ -22,7 +22,8 @@ public class MSSQLConnection implements DatabaseConnection {
 	static {
 		try {
 			Properties connectionProperties = new Properties();
-			connectionProperties.loadFromXML(new FileInputStream("src/main/java/app/dbconn/availibleConnections.xml"));
+			connectionProperties.loadFromXML(
+              new FileInputStream("src/main/java/app/dbconn/availibleConnections.xml"));
 			String urlFromFile = connectionProperties.getProperty("mssql").split("::")[1];
 			DatabaseConnectionFactory.registerDriver("mssql", new MSSQLConnection(urlFromFile));
 		} catch (FileNotFoundException e) {
@@ -32,20 +33,21 @@ public class MSSQLConnection implements DatabaseConnection {
 		}
 	}
 
-	public MSSQLConnection(String database, String host, String instance, String port){
-		url = "jdbc:sqlserver://"+host+"\\"+instance+":"+port+";databaseName="+database+"";
-		getConnected();
-	}
-	public MSSQLConnection(String url){
-		this.url = "jdbc:sqlserver:"+url;
+	public MSSQLConnection(String database, String host, String instance, String port) {
+		url = "jdbc:sqlserver://" + host + "\\" + instance + ":" + port + ";databaseName=" + database;
 		getConnected();
 	}
 
-	private void getConnected(){
-		try{
+	public MSSQLConnection(String url) {
+		this.url = "jdbc:sqlserver:" + url;
+		getConnected();
+	}
+
+	private void getConnected() {
+		try {
 			Class.forName(driver).newInstance();
 	        conn = DriverManager.getConnection(url, databaseUserName, databasePassword);
-		} catch (Exception e){
+		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
 		}
 	}
@@ -53,7 +55,7 @@ public class MSSQLConnection implements DatabaseConnection {
 	public ResultSet runSelectQuery(String query)throws DBConnectionException {
 	    try {
 	        stmt = conn.createStatement();
-	        rs = null;
+	        rs = null; //Hur tänkte jag här? varför behövs denna rad?
 	        rs = stmt.executeQuery(query);
 	    } catch (Exception e) {
 	        throw new DBConnectionException(e.getMessage());
@@ -61,7 +63,7 @@ public class MSSQLConnection implements DatabaseConnection {
 	    return rs;
 	}
 
-public void runNonSelectQuery(String query)throws DBConnectionException {
+public void runNonSelectQuery(String query) throws DBConnectionException {
 	    try {
 	        stmt = conn.createStatement();
 	        stmt.executeUpdate(query);
