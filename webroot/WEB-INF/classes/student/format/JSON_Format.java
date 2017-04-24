@@ -80,7 +80,6 @@ class JSON_Format implements Format {
         }
       }
     }
-
     // FOR EVERY UNIQE "SUBITEM TYPE"...
     // ...CREATE AN ARRAY OF JSON OBJECTS FROM SUBITEMS OF THAT TYPE
     for (String currentSubItemType: collectSubItemTypes(item)) {
@@ -105,29 +104,6 @@ class JSON_Format implements Format {
         sortedFormatables.get(type).add(dataCarrier);
       }
     }
-  }
-
-  public String getMockData() {
-    page = new StringBuilder();
-    StringWriter writer = new StringWriter();
-    JsonWriter jWriter = Json.createWriter(writer);
-    JsonObject jo = Json.createObjectBuilder()
-            .add("firstName","Hanky")
-            .add("lastName","Sandycleavage")
-            .add("age",65)
-            .add("streetAddress","Skidrow 88")
-            .add("State","VGR")
-            .add("postalCode","66613")
-            .add("phoneNumbers", Json.createArrayBuilder()
-            .add(Json.createObjectBuilder()
-                    .add("Mobile", "0700123321"))
-            .add(Json.createObjectBuilder()
-                    .add("Home", "031-90 51 06")))
-            .build();
-    jWriter.writeObject(jo);
-    jWriter.close();
-    page.append(writer.toString());
-    return page.toString();
   }
 
   /** RETURNS A LIST OF STRINGS CONTAINING UNIQE SUBITEM TYPES FROM A FORMATABLE

@@ -55,10 +55,10 @@ public class StudentServiceAPI extends HttpServlet {
       }
       responseWriter.close();
     } catch (IOException ioe) {
-        System.err.println("IOException: " + ioe);
-        //2DO How can a message be sent to client if an IOException is caught?
-        //2DO doGet previously throwed ServletException, why? seems ok without it?
-        //response.sendError(response.SC_INTERNAL_SERVER_ERROR);
+      System.err.println("IOException: " + ioe);
+      //2DO How can a message be sent to client if an IOException is caught?
+      //2DO doGet previously throwed ServletException, why? seems ok without it?
+      //response.sendError(response.SC_INTERNAL_SERVER_ERROR);
     }
 	}
 

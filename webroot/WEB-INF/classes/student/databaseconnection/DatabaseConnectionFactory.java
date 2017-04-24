@@ -34,7 +34,7 @@ public class DatabaseConnectionFactory {
 		driver = System.getProperty("driver");
 	}
 
-	public static void registerDriver(String drivername, DatabaseConnection connection){
+	public static void registerDriver(String drivername, DatabaseConnection connection) {
 		System.out.println("New DB connection registerd: " + drivername);
 		connections.put(drivername, connection);
 	}
