@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.io.*;
 import java.util.*;
+import student.main.Debug;
 
 import javax.swing.JOptionPane;
 
@@ -33,9 +34,9 @@ public class PGSQLConnection implements DatabaseConnection {
 			String urlFromFile = connectionProperties.getProperty("mssql").split("::")[1];
 			DatabaseConnectionFactory.registerDriver("mssql", new PGSQLConnection(urlFromFile));
 		} catch (FileNotFoundException e) {
-			System.err.println("availibleConnections.xml settings file missing.");
+			Debug.stderr("availibleConnections.xml settings file missing.");
 		} catch (IOException ie) {
-			System.err.println(ie);
+			Debug.stderr(ie.getMessage());
 		}
 	}
 

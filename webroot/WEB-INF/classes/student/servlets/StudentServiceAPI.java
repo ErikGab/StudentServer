@@ -1,5 +1,7 @@
 package student.servlets;
 import student.main.StudentService;
+import student.main.ResponseUtil;
+import student.main.Debug;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.*;
@@ -34,7 +36,7 @@ public class StudentServiceAPI extends HttpServlet {
       apiMethods.put("course-null",    getFullCourseInfo);
       apiMethods.put("course-year",    getCoursesByYear);
 		} catch (ClassNotFoundException e) {
-			System.err.println(e.getMessage());
+			Debug.stderr(e.getMessage());
 		}
 	}
 
@@ -46,16 +48,16 @@ public class StudentServiceAPI extends HttpServlet {
                       java.nio.charset.StandardCharsets.UTF_8), true);
       String apiKey = String.valueOf(request.getParameter("type")) + "-" +
               String.valueOf(request.getParameter("by"));
-      System.out.println("apiKey = " + apiKey);
-      if (apiMethods.keySet().contains(apiKey)) {
+      Debug.stdout("Request with apiKey = " + apiKey);
+      if (apiMethods.keySet().contains(apiKey) && request.getParameter("format") != null ) {
         responseWriter.println(apiMethods.get(apiKey).respondToRequest(request, response));
       } else {
-        response.sendError(response.SC_BAD_REQUEST,
-                service.getErrorMessage(response.SC_BAD_REQUEST));
+        responseWriter.println(service.formatError(response.SC_BAD_REQUEST,
+                request.getParameter("format"), response));
       }
       responseWriter.close();
     } catch (IOException ioe) {
-      System.err.println("IOException: " + ioe);
+      Debug.stderr("IOException: " + ioe);
       //2DO How can a message be sent to client if an IOException is caught?
       //2DO doGet previously throwed ServletException, why? seems ok without it?
       //response.sendError(response.SC_INTERNAL_SERVER_ERROR);

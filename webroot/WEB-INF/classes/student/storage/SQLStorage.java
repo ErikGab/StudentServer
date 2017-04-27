@@ -3,6 +3,7 @@ package student.storage;
 import student.databaseconnection.DatabaseConnection;
 import student.databaseconnection.DatabaseConnectionFactory;
 import student.databaseconnection.DBConnectionException;
+import student.main.Debug;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -22,7 +23,7 @@ public class SQLStorage implements StudentStorage {
       connection = DatabaseConnectionFactory.getDatabaseConnection();
       StorageFactory.register("SQL", new SQLStorage());
     } catch (DBConnectionException dbce) {
-      System.err.println(dbce.getMessage());
+      Debug.stdout(dbce.getMessage());
     }
   }
 
@@ -66,9 +67,9 @@ public class SQLStorage implements StudentStorage {
         returningList.add(new StdItem("student", currentStudentID, properties, subItems));
       }
     } catch (DBConnectionException dbe) {
-  		System.err.println("DATABASE CONNECTION ERROR: " + dbe.getMessage());
+  		Debug.stderr("DATABASE CONNECTION ERROR: " + dbe.getMessage());
   	} catch (SQLException sqle) {
-  		System.err.println("SQL ERROR: " + sqle.getMessage());
+  		Debug.stderr("SQL ERROR: " + sqle.getMessage());
     }
     return returningList;
   }
@@ -92,9 +93,9 @@ public class SQLStorage implements StudentStorage {
         returningList.add(new StdItem("student", currentStudentID, properties));
       }
     } catch (DBConnectionException dbe) {
-  		System.err.println("DATABASE CONNECTION ERROR: " + dbe.getMessage());
+  		Debug.stderr("DATABASE CONNECTION ERROR: " + dbe.getMessage());
     } catch (SQLException sqle) {
-  		System.err.println("SQL ERROR: " + sqle.getMessage());
+  		Debug.stderr("SQL ERROR: " + sqle.getMessage());
     }
     return returningList;
   }
@@ -133,9 +134,9 @@ public class SQLStorage implements StudentStorage {
         returningList.add(new StdItem("course", currentCourseID, properties, subItems));
       }
     } catch (DBConnectionException dbe) {
-  		System.err.println("DATABASE CONNECTION ERROR: " + dbe.getMessage());
+  		Debug.stderr("DATABASE CONNECTION ERROR: " + dbe.getMessage());
   	} catch (SQLException sqle) {
-  		System.err.println("SQL ERROR: " + sqle.getMessage());
+  		Debug.stderr("SQL ERROR: " + sqle.getMessage());
   	}
     return returningList;
   }
@@ -158,9 +159,9 @@ public class SQLStorage implements StudentStorage {
         returningList.add(new StdItem("course", currentCourseID, properties));
       }
     } catch (DBConnectionException dbe) {
-  	  System.err.println("DATABASE CONNECTION ERROR: " + dbe.getMessage());
+  	  Debug.stderr("DATABASE CONNECTION ERROR: " + dbe.getMessage());
   	} catch (SQLException sqle) {
-  	  System.err.println("SQL ERROR: " + sqle.getMessage());
+  	  Debug.stderr("SQL ERROR: " + sqle.getMessage());
   	}
     return returningList;
   }

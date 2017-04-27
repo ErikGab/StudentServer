@@ -2,6 +2,7 @@ package student.format;
 import java.io.*;
 import java.util.*;
 import java.util.List;
+import student.main.Debug;
 
 public class FormatService {
 
@@ -14,6 +15,12 @@ public class FormatService {
     return requestedFormat.formatList(listOfFormatables);
   }
 
+  public static String formatMessage(String message, String format)
+          throws FormatException {
+    Format requestedFormat = FormatFactory.getFormat(format);
+    return requestedFormat.formatMessage(message);
+  }
+
   public static String getContentType(String format) {
     String contentTypeString = "";
     try {
@@ -21,11 +28,21 @@ public class FormatService {
       formats.loadFromXML(new FileInputStream(CONTENT_TYPE_XML));
       contentTypeString = String.valueOf(formats.getProperty(format));
     } catch (FileNotFoundException fne) {
-      System.err.println(fne.getMessage());
+      Debug.stderr(fne.getMessage());
     } catch (IOException ioe) {
-      System.err.println(ioe.getMessage());
+      Debug.stderr(ioe.getMessage());
+    } catch (NullPointerException npe) {
+      Debug.stderr(npe.getMessage());
     }
-    return contentTypeString;
+    return contentTypeFallback(contentTypeString);
+  }
+
+  private static String contentTypeFallback(String contentType) {
+    if (contentType == null || contentType.equals("") || contentType.equals("null")) {
+      return "text/plain";
+    } else {
+      return contentType;
+    }
   }
 
 }

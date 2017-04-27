@@ -2,6 +2,7 @@ package student.databaseconnection;
 
 import java.io.*;
 import java.util.*;
+import student.main.Debug;
 
 public class DatabaseConnectionFactory {
 
@@ -17,25 +18,24 @@ public class DatabaseConnectionFactory {
 			for(String connection : connectionProperties.stringPropertyNames()){
 	 			String className = connectionProperties.getProperty(connection).split("::")[0];
 				if (connectionProperties.getProperty(connection).split("::")[2].equals("true")) {
-					System.out.println(connection + " connection found, loading class: " + className);
+					Debug.stdout(connection + " connection found, loading class: " + className);
 		 			try {
-            //System.out.println("DBCFactory: Trying to load :" + className);
 		 				Class.forName(className);
-		 			} catch(ClassNotFoundException cnfe) {
-						System.err.println(cnfe.getMessage());
+		 			} catch (ClassNotFoundException cnfe) {
+						Debug.stderr(cnfe.getMessage());
 					}
 				}
 			}
 		} catch (FileNotFoundException e) {
-			System.err.println("DBCFactory: availibleConnections.xml settings file missing." + e);
+			Debug.stderr("DBCFactory: availibleConnections.xml settings file missing." + e);
 		} catch (IOException ie) {
-			System.err.println(ie);
+			Debug.stderr(ie.getMessage());
 		}
 		driver = System.getProperty("driver");
 	}
 
 	public static void registerDriver(String drivername, DatabaseConnection connection) {
-		System.out.println("New DB connection registerd: " + drivername);
+		Debug.stdout("New DB connection registerd: " + drivername);
 		connections.put(drivername, connection);
 	}
 
@@ -43,14 +43,15 @@ public class DatabaseConnectionFactory {
 
 	public static DatabaseConnection getDatabaseConnection() throws DBConnectionException {
 		if (connections.containsKey(driver)) {
-			System.out.println("Returning requested driver: " + driver);
+			Debug.stdout("Returning requested driver: " + driver);
       return connections.get(driver);
 		} else if (connections.containsKey(DEFAULTDRIVER)) {
-			System.err.println(driver + " driver not found.\nReturning default driver: " + DEFAULTDRIVER);
+			Debug.stderr(driver + " driver not found.\nReturning default driver: " + DEFAULTDRIVER);
       return connections.get(DEFAULTDRIVER);
     } else {
-			System.err.println("No suitable driver found: " + driver);
+			Debug.stderr("No suitable driver found: " + driver);
 			throw new DBConnectionException("No " + driver + " support availible.");
 		}
 	}
+
 }

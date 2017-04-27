@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.io.*;
 import java.util.*;
+import student.main.Debug;
 
 import javax.swing.JOptionPane;
 
@@ -23,9 +24,9 @@ public class SQLiteConnection implements DatabaseConnection {
 			String urlFromFile = connectionProperties.getProperty("sqlite").split("::")[1];
 			DatabaseConnectionFactory.registerDriver("sqlite", new SQLiteConnection(urlFromFile));
 		} catch (FileNotFoundException e) {
-			System.err.println("SQLiteConnection: availibleConnections.xml settings file missing." + e);
+			Debug.stderr("SQLiteConnection: availibleConnections.xml settings file missing." + e);
 		} catch (IOException ie) {
-			System.err.println(ie);
+			Debug.stderr(ie.getMessage());
 		}
 	}
 
@@ -34,7 +35,7 @@ public class SQLiteConnection implements DatabaseConnection {
     	try {
       	Class.forName("org.sqlite.JDBC");
     	} catch (ClassNotFoundException cnfe) {
-      	System.err.println("Could not load driver: " + cnfe.getMessage());
+      	Debug.stderr("Could not load driver: " + cnfe.getMessage());
     	}
   	}
 
@@ -46,7 +47,7 @@ public class SQLiteConnection implements DatabaseConnection {
 		try {
 	    conn = DriverManager.getConnection(DB_CONN_STR + db);
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, e.getMessage());
+			Debug.stderr(e.getMessage());
 		}
 	}
 

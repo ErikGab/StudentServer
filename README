@@ -1,0 +1,15 @@
+LICENSE: GPL
+
+  Used licensed software:
+   * Winstone  LGPL license, read more at http://winstone.sourceforge.net/#license
+
+
+Not included dependencies:
+
+ * SQLite3
+ * Bash
+ * Java jre-8
+ * Java jdk-8
+
+Start:
+ run cleanBuildRun.sh

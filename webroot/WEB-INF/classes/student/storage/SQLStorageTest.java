@@ -104,22 +104,22 @@ public class SQLStorageTest {
 
 
 
-@Test
-public void getCoursesByYearByCourseTestNotNull() throws StudentStorageException {
-  StudentStorage storage = StorageFactory.getStorage("SQL");
-  assertNotNull("should not be null", storage.getCoursesByYear(0));
-}
+  @Test
+  public void getCoursesByYearByCourseTestNotNull() throws StudentStorageException {
+    StudentStorage storage = StorageFactory.getStorage("SQL");
+    assertNotNull("should not be null", storage.getCoursesByYear(0));
+  }
 
-@Test
-public void getCoursesByYearByCourseTestListLenght1() throws StudentStorageException {
-  StudentStorage storage = StorageFactory.getStorage("SQL");
-  assertTrue("should be list with many elements", storage.getCoursesByYear(2016).size() >= 5 );
-}
+  @Test
+  public void getCoursesByYearByCourseTestListLenght1() throws StudentStorageException {
+    StudentStorage storage = StorageFactory.getStorage("SQL");
+    assertTrue("should be list with many elements", storage.getCoursesByYear(2016).size() >= 5 );
+  }
 
-@Test
-public void getCoursesByYearByCourseTestListLenght2() throws StudentStorageException {
-  StudentStorage storage = StorageFactory.getStorage("SQL");
-  assertTrue("should be list with no elements", storage.getCoursesByYear(1942).size() == 0 );
-}
+  @Test
+  public void getCoursesByYearByCourseTestListLenght2() throws StudentStorageException {
+    StudentStorage storage = StorageFactory.getStorage("SQL");
+    assertTrue("should be list with no elements", storage.getCoursesByYear(1942).size() == 0 );
+  }
 
 }

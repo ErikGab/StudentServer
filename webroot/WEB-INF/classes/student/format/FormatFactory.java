@@ -1,6 +1,7 @@
 package student.format;
 import java.io.*;
 import java.util.*;
+import student.main.Debug;
 
 public class FormatFactory {
 
@@ -12,28 +13,28 @@ public class FormatFactory {
       formats.loadFromXML(new FileInputStream(FORMATS_XML));
       for (String format : formats.stringPropertyNames()) {
         String className = formats.getProperty(format);
-        System.out.println(format + " formatter found, loading class: " + className);
+        Debug.stdout(format + " formatter found, loading class: " + className);
         try {
           Class.forName(className);
         } catch (ClassNotFoundException cnfe) {
-          System.err.println(cnfe.getMessage());
+          Debug.stderr(cnfe.getMessage());
         }
       }
     } catch (FileNotFoundException fne) {
-      System.err.println(fne.getMessage());
+      Debug.stderr(fne.getMessage());
     } catch (IOException ioe) {
-      System.err.println(ioe.getMessage());
+      Debug.stderr(ioe.getMessage());
     }
   }
 
   public static void register(String key, Format formatInstance) {
-    System.out.println("New Format registerd: " + key);
+    Debug.stdout("New Format registerd: " + key);
     formatsMap.put(key,formatInstance);
   }
 
   public static Format getFormat(String requestedFormat) throws FormatException {
     String format = String.valueOf(requestedFormat);
-    System.out.println(format);
+    Debug.stdout("returning format: " + format);
     if (formatsMap.containsKey(format)) {
       return formatsMap.get(format);
     } else {

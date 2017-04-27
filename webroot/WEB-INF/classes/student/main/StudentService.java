@@ -11,6 +11,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import java.sql.*;
 import java.io.*;
 import java.util.*;
+import student.main.Debug;
 
 public class StudentService {
 
@@ -23,7 +24,7 @@ public class StudentService {
       //2DO remove hardcoding of SQL. make -D input set default storagetype
       storage = StorageFactory.getStorage("SQL");
     } catch (StudentStorageException sse) {
-      System.err.println(sse.getMessage());
+      Debug.stderr(sse.getMessage());
     }
   }
 
@@ -34,71 +35,64 @@ public class StudentService {
   private StudentService() {};
 
   public String getFullStudentInfo(HttpServletRequest request, HttpServletResponse response) {
+    String format = request.getParameter("format");
     try {
       List<Formatable> students;
       students = storage.getStudent(parseId(request.getParameter("id")));
-      return formatResponse(students, request.getParameter("format"), response);
+      return formatResponse(students, format, response);
     } catch (StudentStorageException sse) {
-      System.err.println(sse.getMessage());
-      return getErrorMessage(666);
+      Debug.stderr(sse.getMessage());
+      return formatError(response.SC_INTERNAL_SERVER_ERROR, format, response);
     }
   }
 
-  public String getStudentsByCourse(HttpServletRequest request, HttpServletResponse response) {
+  public String getStudentsByCourse(HttpServletRequest request, HttpServletResponse response){
+    String format = request.getParameter("format");
     try {
       List<Formatable> students;
       students = storage.getStudentsByCourse(parseId(request.getParameter("id")));
-      return formatResponse(students, request.getParameter("format"), response);
+      return formatResponse(students, format, response);
     } catch (StudentStorageException sse) {
-      System.err.println(sse.getMessage());
-      return getErrorMessage(666);
+      Debug.stderr(sse.getMessage());
+      return formatError(response.SC_INTERNAL_SERVER_ERROR, format, response);
     }
   }
 
   public String getFullCourseInfo(HttpServletRequest request, HttpServletResponse response) {
+    String format = request.getParameter("format");
     try {
       List<Formatable> courses;
       courses = storage.getCourse(parseId(request.getParameter("id")));
-      return formatResponse(courses, request.getParameter("format"), response);
+      return formatResponse(courses, format, response);
     } catch (StudentStorageException sse) {
-      System.err.println(sse.getMessage());
-      return getErrorMessage(666);
+      Debug.stderr(sse.getMessage());
+      return formatError(response.SC_INTERNAL_SERVER_ERROR, format, response);
     }
   }
 
   public String getCoursesByYear(HttpServletRequest request, HttpServletResponse response) {
+    String format = request.getParameter("format");
     try {
       List<Formatable> courses;
       courses = storage.getCoursesByYear(parseId(request.getParameter("id")));
-      return formatResponse(courses, request.getParameter("format"), response);
+      return formatResponse(courses, format, response);
     } catch (StudentStorageException sse) {
-      System.err.println(sse.getMessage());
-      return getErrorMessage(666);
+      Debug.stderr(sse.getMessage());
+      return formatError(response.SC_INTERNAL_SERVER_ERROR, format, response);
     }
   }
 
-  //
-  //   2DO Fixa det här med ERROR meddelanden och Headers
-  //
-  //
-  //
-  //obvious placeholder is obvious
-  public String getErrorMessage(int code) {
-    return getErrorMessage(String.valueOf(code));
-  }
-
-  public String getErrorMessage(String code) {
-    String message;
+  public String formatError(int code, String format, HttpServletResponse response) {
+    response.setStatus(code);
+    response.setContentType(FormatService.getContentType(format));
+    response.setCharacterEncoding("UTF-8");
     try {
-      Properties errorXML = new Properties();
-      errorXML.loadFromXML(new FileInputStream(
-              "webroot/WEB-INF/classes/student/main/responseMessages.xml"));
-      message = errorXML.getProperty(code) + "\n";
-    } catch (IOException ioe) {
-      System.err.println("Failed to load responseMessages");
-      message = "error: "+code;
+      return FormatService.formatMessage(ResponseUtil.getErrorMessage(code), format);
+    } catch (FormatException fe) {
+      Debug.stderr(fe.getMessage());
+      response.setStatus(response.SC_NOT_IMPLEMENTED);
+      return ResponseUtil.getErrorMessage(response.SC_NOT_IMPLEMENTED);
     }
-    return message;
   }
 
   private String formatResponse(List<Formatable> list, String format, HttpServletResponse response) {
@@ -106,11 +100,17 @@ public class StudentService {
     try {
       responseData = FormatService.formatList(list, format);
       response.setContentType(FormatService.getContentType(format));
-      response.setStatus(response.SC_OK);
+      if (list.size() > 0) {
+        response.setStatus(response.SC_OK);
+      } else {
+        responseData = formatError(response.SC_NOT_FOUND, format, response);
+      }
       response.setCharacterEncoding("UTF-8");
     } catch (FormatException fe) {
-      System.err.println(fe.getMessage());
-      responseData = getErrorMessage(666);
+      Debug.stderr(fe.getMessage());
+      response.setStatus(response.SC_NOT_IMPLEMENTED);
+      response.setContentType(FormatService.getContentType(format));
+      return ResponseUtil.getErrorMessage(response.SC_NOT_IMPLEMENTED);
     }
     return responseData;
   }
@@ -123,7 +123,7 @@ public class StudentService {
       try {
         intId = Integer.parseInt(stringId);
       } catch (NumberFormatException nfe) {
-        intId = 0;
+        intId = -1;
       }
     }
     return intId;
@@ -134,8 +134,17 @@ public class StudentService {
     try {
       storage = StorageFactory.getStorage(type);
     } catch (StudentStorageException sse) {
-      System.err.println(sse.getMessage());
+      Debug.stderr(sse.getMessage());
     }
   }
-  
+
+  // private String unformatedError(HttpServletResponse response) {
+  //   try {
+  //     response.sendError(response.SC_NOT_IMPLEMENTED,
+  //             ResponseUtil.getErrorMessage(response.SC_NOT_IMPLEMENTED));
+  //   } catch (IOException ioe) {
+  //     Debug.stderr(ioe.getMessage());
+  //   }
+  // }
+
 }

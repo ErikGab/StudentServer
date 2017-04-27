@@ -19,6 +19,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.DOMException;
 import java.io.StringWriter;
+import student.main.Debug;
 
 class XML_Format implements Format {
 
@@ -32,6 +33,15 @@ class XML_Format implements Format {
   private XML_Format() {};
 
   private Map<String, List<Formatable>> sortedFormatables;
+
+  public String formatMessage(String message) {
+    StringBuilder page = new StringBuilder();
+    page.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n")
+        .append("<error>\n")
+        .append(" <message>" + message + "</message>\n")
+        .append("</error>");
+    return page.toString();
+  }
 
   public String getMockData() {
     StringBuilder page = new StringBuilder();
@@ -85,11 +95,11 @@ class XML_Format implements Format {
       transformer.transform(source, new StreamResult(writer));
       result = writer.getBuffer().toString();
     } catch (ParserConfigurationException pce) {
-      System.err.println("Oj oj ett ParserConfigurationException i XML_Format");
+      Debug.stderr("ParserConfigurationException in XML_Format");
     } catch (TransformerConfigurationException tce) {
-      System.err.println("Oj oj ett TransformerConfigurationException i XML_Format");
+      Debug.stderr("TransformerConfigurationException in XML_Format");
     } catch (TransformerException te) {
-      System.err.println("Oj oj ett TransformerException i XML_Format");
+      Debug.stderr("TransformerException in XML_Format");
     }
     return result;
     //return getMockData();
@@ -107,5 +117,5 @@ class XML_Format implements Format {
       }
     }
   }
-  
+
 }

@@ -26,6 +26,10 @@ class JSON_Format implements Format {
 
   private JSON_Format() {};
 
+  public String formatMessage(String message) {
+    return "{\"error\":[{\"message\":\"" + message + "\"}]}";
+  }
+
   /** CONVERTS A LIST OF FORMATABLES TO A JSON STRING...LIKA A BOSS
   */
   public String formatList(List<Formatable> listOfFormatables) {

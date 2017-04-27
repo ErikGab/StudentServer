@@ -19,6 +19,12 @@ class HTML_Format implements Format {
 
   private HTML_Format() {};
 
+  public String formatMessage(String message) {
+    resetPage();
+    page.append("<p>" + message + "</p></body></html>");
+    return page.toString();
+  }
+
   public String getMockData() {
     page = new StringBuilder();
     page.append("<html>\n<head>\n<title>Hanky contact infoz</title>\n")
@@ -37,20 +43,22 @@ class HTML_Format implements Format {
     resetPage();
     sortFormatables(listOfFormatables);
     for (String type:sortedFormatables.keySet()) {
-      page.append(type)
-          .append("\n")
-          .append("<table border=\"1\">\n");
+      page.append("    <p>")
+          .append(type)
+          .append("</p>\n")
+          .append("    <table border=\"1\">\n");
       addDescriptionRow(sortedFormatables.get(type));
       addDataRows(sortedFormatables.get(type));
-      page.append("</table>\n");
+      page.append("    </table>\n")
+          .append("  </body>\n")
+          .append("</html>\n");
     }
     return page.toString();
   }
 
   private void resetPage() {
-    page = new StringBuilder().append("<html>\n<head>\n<title>Requested data</title>\n")
-                              .append("<style>\ntd{ vertical-align: top; }\n</style>")
-                              .append("</head>\n<body>\n");
+    page = new StringBuilder().append("<html>\n  <head>\n    <title>Requested data</title>\n")
+                              .append("  </head>\n  <body>\n");
   }
 
   private void addDescriptionRow(List<Formatable> list) {
@@ -68,20 +76,21 @@ class HTML_Format implements Format {
         }
       }
     }
+    page.append("      ");
     for (String header : headers) {
       page.append("<th>" + header + "</th>");
     }
     for (String header : subItemHeaders) {
       page.append("<th>" + header + "</th>");
     }
-    page.append("<br>");
+    page.append("\n");
   }
 
   private void addDataRows(List<Formatable> list) {
     for (Formatable item : list) {
       Map<String, String> properties = item.getProperties();
       List<Formatable> subitems = item.getSubItems();
-      page.append("<tr>");
+      page.append("      <tr>");
       for (String header : headers) {
         if (properties.keySet().contains(header)) {
           page.append("<td>" + properties.get(header) + "</td>");
@@ -102,7 +111,7 @@ class HTML_Format implements Format {
         }
         page.append("</td>");
       }
-      page.append("</tr>");
+      page.append("</tr>\n");
     }
   }
 

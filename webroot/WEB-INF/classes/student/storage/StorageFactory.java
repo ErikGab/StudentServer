@@ -2,6 +2,7 @@ package student.storage;
 
 import java.io.*;
 import java.util.*;
+import student.main.Debug;
 
 public class StorageFactory {
 
@@ -16,17 +17,17 @@ public class StorageFactory {
       storages.loadFromXML(new FileInputStream(STORAGE_XML));
       for (String storage : storages.stringPropertyNames()) {
         String className = storages.getProperty(storage);
-        System.out.println(storage + " storage found, loading class: " + className);
+        Debug.stdout(storage + " storage found, loading class: " + className);
         try {
           Class.forName(className);
         } catch (ClassNotFoundException cnfe) {
-          System.err.println(cnfe.getMessage());
+          Debug.stderr(cnfe.getMessage());
         }
       }
     } catch (FileNotFoundException fne) {
-      System.err.println(fne.getMessage());
+      Debug.stderr(fne.getMessage());
     } catch (IOException ioe) {
-      System.err.println(ioe.getMessage());
+      Debug.stderr(ioe.getMessage());
     }
   }
 
@@ -47,7 +48,7 @@ public class StorageFactory {
   }
 
   public static void register(String key, StudentStorage storageInstance) {
-    System.out.println("New storage registerd: " + key);
+    Debug.stdout("New storage registerd: " + key);
     storageMap.put(key,storageInstance);
   }
 
