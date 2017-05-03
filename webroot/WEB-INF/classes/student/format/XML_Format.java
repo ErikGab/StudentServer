@@ -20,10 +20,12 @@ import org.w3c.dom.Element;
 import org.w3c.dom.DOMException;
 import java.io.StringWriter;
 import student.main.Debug;
+import java.util.stream.Collectors;
 
 class XML_Format implements Format {
 
   private Map<String, List<Formatable>> sortedFormatables;
+  private Document doc;
 
   private static XML_Format instance;
   static {
@@ -53,22 +55,14 @@ class XML_Format implements Format {
     try {
       DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
       DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-      Document doc = docBuilder.newDocument();
+      doc = docBuilder.newDocument();
       Element rootElement = doc.createElement("ITEMS");
       doc.appendChild(rootElement);
 
       for (String type : sortedFormatables.keySet()) {
         Element typeElement = doc.createElement(type + "s");
         for ( Formatable item : sortedFormatables.get(type)) {
-          Map<String, String> properties = item.getProperties();
-          Element itemElement = doc.createElement(type);
-          itemElement.setAttribute("id", Integer.toString(item.getId()));
-          for (String key : properties.keySet()) {
-            Element x = doc.createElement(key);
-            x.appendChild(doc.createTextNode(properties.get(key)));
-            itemElement.appendChild(x);
-          }
-          typeElement.appendChild(itemElement);
+          typeElement.appendChild(formatable2xmlElement(item));
         }
         rootElement.appendChild(typeElement);
       }
@@ -85,7 +79,7 @@ class XML_Format implements Format {
     } catch (TransformerConfigurationException tce) {
       Debug.stderr("TransformerConfigurationException in XML_Format");
     } catch (TransformerException te) {
-      Debug.stderr("TransformerException in XML_Format");
+      Debug.stderr("TransformerException in XML_Format " + te.getMessage());
     }
     return result;
   }
@@ -102,6 +96,44 @@ class XML_Format implements Format {
         sortedFormatables.get(type).add(dataCarrier);
       }
     }
+  }
+
+  //Creates an element from a formatable
+  private Element formatable2xmlElement(Formatable item) {
+    Map<String, String> properties = item.getProperties();
+    String type = item.getItemType();
+    List<Formatable> subItems = item.getSubItems();
+    Element itemElement = doc.createElement(type);
+    itemElement.setAttribute("id", Integer.toString(item.getId()));
+    for (String key : properties.keySet()) {
+      Element x = doc.createElement(key);
+      x.appendChild(doc.createTextNode(String.valueOf(properties.get(key))));
+      itemElement.appendChild(x);
+    }
+    for (String currentSubItemType: collectSubItemTypes(item)) {
+      List<Formatable> filterdSubItems = subItems.stream()
+              .filter(i -> i.getItemType().equals(currentSubItemType)) //.filter(i -> i.getProperties().keySet().size() > 0)
+              .collect(Collectors.toList());
+      itemElement.appendChild(listOfSubitems2Elements(filterdSubItems, currentSubItemType));
+    }
+    return itemElement;
+  }
+
+  //Turns list of subitems to an element that is returned
+  private Element listOfSubitems2Elements(List<Formatable> list, String name) {
+    Element subItemTypeElement = doc.createElement(name);
+    list.stream()
+            .filter(i -> i.getProperties().keySet().size() > 0)
+            .forEach(f -> subItemTypeElement.appendChild(formatable2xmlElement(f)));
+    return subItemTypeElement;
+  }
+
+  // RETURNS A LIST OF STRINGS CONTAINING UNIQE SUBITEM TYPES FROM A FORMATABLE
+  private List<String> collectSubItemTypes(Formatable item) {
+    return item.getSubItems().stream()
+            .map(i -> i.getItemType())
+            .distinct()
+            .collect(Collectors.toList());
   }
 
 }
