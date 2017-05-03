@@ -4,10 +4,16 @@ import java.util.*;
 
 public class ResponseUtil {
 
+  private ResponseUtil() {}
+
+  /** Returns a string containing errormessage for requested error code
+  */
   public static String getErrorMessage(int code) {
     return getErrorMessage(String.valueOf(code));
   }
 
+  /** Returns a string containing errormessage for requested error code
+  */
   public static String getErrorMessage(String code) {
     String message;
     try {

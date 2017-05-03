@@ -23,17 +23,18 @@ import student.main.Debug;
 
 class XML_Format implements Format {
 
+  private Map<String, List<Formatable>> sortedFormatables;
+
   private static XML_Format instance;
   static {
-    //System.out.println("Static block of XML_Format running...");
     instance = new XML_Format();
     FormatFactory.register("xml", instance);
   }
 
   private XML_Format() {};
 
-  private Map<String, List<Formatable>> sortedFormatables;
-
+  /** Wraps a message in XML and returns it
+  */
   public String formatMessage(String message) {
     StringBuilder page = new StringBuilder();
     page.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n")
@@ -43,23 +44,9 @@ class XML_Format implements Format {
     return page.toString();
   }
 
-  public String getMockData() {
-    StringBuilder page = new StringBuilder();
-    page.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n")
-        .append("<address>\n")
-        .append(" <first-name>Hanky</first-name>\n")
-        .append(" <last-name>Sandycleavage</last-name>\n")
-        .append(" <age>65</age>\n")
-        .append(" <street-address>Skidrow 88</street-address>\n")
-        .append(" <state>VGR</state>\n")
-        .append(" <phone-numbers>\n")
-        .append("  <mobile>0700123321</mobile>\n")
-        .append("  <home>031-90 51 06</home>\n")
-        .append(" </phone-numbers>\n")
-        .append("</address>\n");
-    return page.toString();
-  }
-
+  /** Returns a string containing XML describing the content if input list
+  *
+  */
   public String formatList(List<Formatable> listOfFormatables) {
     sortFormatables(listOfFormatables);
     String result = "";
@@ -91,7 +78,6 @@ class XML_Format implements Format {
       transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
       StringWriter writer = new StringWriter();
       DOMSource source = new DOMSource(doc);
-      //StreamResult result = new StreamResult(new File("CV.xml"));
       transformer.transform(source, new StreamResult(writer));
       result = writer.getBuffer().toString();
     } catch (ParserConfigurationException pce) {
@@ -102,9 +88,9 @@ class XML_Format implements Format {
       Debug.stderr("TransformerException in XML_Format");
     }
     return result;
-    //return getMockData();
   }
 
+  // Groups list of formatables into map
   private void sortFormatables(List<Formatable> currentList) {
     sortedFormatables = new HashMap<>();
     for (Formatable dataCarrier : currentList) {

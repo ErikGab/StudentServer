@@ -21,7 +21,7 @@ public class StudentService {
   static {
     instance = new StudentService();
     try {
-      //2DO remove hardcoding of SQL. make -D input set default storagetype
+      //2DO remove hardcoding of SQL. make -D input set storagetype
       storage = StorageFactory.getStorage("SQL");
     } catch (StudentStorageException sse) {
       Debug.stderr(sse.getMessage());
@@ -34,6 +34,9 @@ public class StudentService {
 
   private StudentService() {};
 
+  /** Takes a HTTP request (for Detailed Student Information)...
+  *   ...retrieves requested data and formats it to requested format.
+  */
   public String getFullStudentInfo(HttpServletRequest request, HttpServletResponse response) {
     String format = request.getParameter("format");
     try {
@@ -46,6 +49,9 @@ public class StudentService {
     }
   }
 
+  /** Takes a HTTP request (for Student Information)...
+  *   ...retrieves requested data and formats it to requested format.
+  */
   public String getStudentsByCourse(HttpServletRequest request, HttpServletResponse response){
     String format = request.getParameter("format");
     try {
@@ -58,6 +64,9 @@ public class StudentService {
     }
   }
 
+  /** Takes a HTTP request (for Detailed Course Information)...
+  *   ...retrieves requested data and formats it to requested format.
+  */
   public String getFullCourseInfo(HttpServletRequest request, HttpServletResponse response) {
     String format = request.getParameter("format");
     try {
@@ -70,6 +79,9 @@ public class StudentService {
     }
   }
 
+  /** Takes a HTTP request (for Course Information)...
+  *   ...retrieves requested data and formats it to requested format.
+  */
   public String getCoursesByYear(HttpServletRequest request, HttpServletResponse response) {
     String format = request.getParameter("format");
     try {
@@ -82,6 +94,9 @@ public class StudentService {
     }
   }
 
+  /** Tries to format error message
+  *
+  */
   public String formatError(int code, String format, HttpServletResponse response) {
     response.setStatus(code);
     response.setContentType(FormatService.getContentType(format));
@@ -95,12 +110,13 @@ public class StudentService {
     }
   }
 
+  // if list has content, formats that content, if not formats error message insted.
   private String formatResponse(List<Formatable> list, String format, HttpServletResponse response) {
     String responseData;
     try {
-      responseData = FormatService.formatList(list, format);
-      response.setContentType(FormatService.getContentType(format));
       if (list.size() > 0) {
+        responseData = FormatService.formatList(list, format);
+        response.setContentType(FormatService.getContentType(format));
         response.setStatus(response.SC_OK);
       } else {
         responseData = formatError(response.SC_NOT_FOUND, format, response);
@@ -115,6 +131,7 @@ public class StudentService {
     return responseData;
   }
 
+  // parse string to int
   private int parseId(String stringId) {
     int intId;
     if (stringId == null || stringId.equals("all")) {
@@ -130,6 +147,7 @@ public class StudentService {
   }
 
   //2DO this is never called. Should an APImethod be added to reach this?
+  //...or should this be remvoved?
   private void changeStorage(String type) {
     try {
       storage = StorageFactory.getStorage(type);
@@ -137,14 +155,5 @@ public class StudentService {
       Debug.stderr(sse.getMessage());
     }
   }
-
-  // private String unformatedError(HttpServletResponse response) {
-  //   try {
-  //     response.sendError(response.SC_NOT_IMPLEMENTED,
-  //             ResponseUtil.getErrorMessage(response.SC_NOT_IMPLEMENTED));
-  //   } catch (IOException ioe) {
-  //     Debug.stderr(ioe.getMessage());
-  //   }
-  // }
 
 }

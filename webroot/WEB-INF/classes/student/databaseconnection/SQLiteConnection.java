@@ -12,12 +12,15 @@ import javax.swing.JOptionPane;
 
 public class SQLiteConnection implements DatabaseConnection {
 
-	Connection conn = null;
-  Statement stmt = null;
-  ResultSet rs = null;
-  static private final String CONNECTIONS_XML =
+	private Connection conn = null;
+  private Statement stmt = null;
+  private ResultSet rs = null;
+  private static final String CONNECTIONS_XML =
           "webroot/WEB-INF/classes/student/databaseconnection/availibleConnections.xml";
-	static {
+  private static final String DB_CONN_STR = "jdbc:sqlite:";
+  private static final String DRIVER = "org.sqlite.JDBC";
+
+  static {
 		try {
 			Properties connectionProperties = new Properties();
 			connectionProperties.loadFromXML(new FileInputStream(CONNECTIONS_XML));
@@ -28,16 +31,12 @@ public class SQLiteConnection implements DatabaseConnection {
 		} catch (IOException ie) {
 			Debug.stderr(ie.getMessage());
 		}
+    try {
+      Class.forName(DRIVER);
+    } catch (ClassNotFoundException cnfe) {
+      Debug.stderr("Could not load driver: " + cnfe.getMessage());
+    }
 	}
-
-	private final static String DB_CONN_STR = "jdbc:sqlite:";
-  	static {
-    	try {
-      	Class.forName("org.sqlite.JDBC");
-    	} catch (ClassNotFoundException cnfe) {
-      	Debug.stderr("Could not load driver: " + cnfe.getMessage());
-    	}
-  	}
 
 	public SQLiteConnection(String db) {
 		getConnected(db);
@@ -51,6 +50,9 @@ public class SQLiteConnection implements DatabaseConnection {
 		}
 	}
 
+  /** Executes a query that should return an answer, answer is returned as a ResultSet
+  *
+  */
 	public ResultSet runSelectQuery(String query) throws DBConnectionException {
     rs = null;
     try {
@@ -62,6 +64,9 @@ public class SQLiteConnection implements DatabaseConnection {
 	  return rs;
 	}
 
+  /** Executes a query that should NOT return an answer.
+  *
+  */
   public void runNonSelectQuery(String query)throws DBConnectionException {
 	  try {
 	    stmt = conn.createStatement();

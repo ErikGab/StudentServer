@@ -12,13 +12,13 @@ import javax.swing.JOptionPane;
 
 public class MSSQLConnection implements DatabaseConnection {
 
-	Connection conn = null;
-    String url;
-    Statement stmt = null;
-    ResultSet rs = null;
-    String driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-    String databaseUserName = "JavaLogin";
-    String databasePassword = "Losen123";
+	private Connection conn = null;
+  private String url;
+  private Statement stmt = null;
+  private ResultSet rs = null;
+  private static final String DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
+  private String databaseUserName = "JavaLogin";
+  private String databasePassword = "Losen123";
 
 	static {
 		try {
@@ -46,14 +46,17 @@ public class MSSQLConnection implements DatabaseConnection {
 
 	private void getConnected() {
 		try {
-			Class.forName(driver).newInstance();
-	        conn = DriverManager.getConnection(url, databaseUserName, databasePassword);
+			Class.forName(DRIVER).newInstance();
+	    conn = DriverManager.getConnection(url, databaseUserName, databasePassword);
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
 		}
 	}
 
-	public ResultSet runSelectQuery(String query)throws DBConnectionException {
+  /** Executes a query that should return an answer, answer is returned as a ResultSet
+  *
+  */
+	public ResultSet runSelectQuery(String query) throws DBConnectionException {
 	    try {
 	        stmt = conn.createStatement();
 	        rs = null; //Hur tänkte jag här? varför behövs denna rad?
@@ -64,7 +67,10 @@ public class MSSQLConnection implements DatabaseConnection {
 	    return rs;
 	}
 
-public void runNonSelectQuery(String query) throws DBConnectionException {
+  /** Executes a query that should NOT return an answer.
+  *
+  */
+  public void runNonSelectQuery(String query) throws DBConnectionException {
 	    try {
 	        stmt = conn.createStatement();
 	        stmt.executeUpdate(query);

@@ -26,11 +26,14 @@ class JSON_Format implements Format {
 
   private JSON_Format() {};
 
+  /** Wraps the input message with json and returns it
+  /
+  */
   public String formatMessage(String message) {
     return "{\"error\":[{\"message\":\"" + message + "\"}]}";
   }
 
-  /** CONVERTS A LIST OF FORMATABLES TO A JSON STRING...LIKA A BOSS
+  /** Coverts a list of formatables to a JSON string...LIKA A BOSS
   */
   public String formatList(List<Formatable> listOfFormatables) {
     page = new StringBuilder();
@@ -51,19 +54,18 @@ class JSON_Format implements Format {
     return page.toString();
   }
 
-  /** TAKES A LIST OF FORMATABLES AND RETURNS A JSON ARRAY OF JSON OBJECTS
-  *   EACH FORMATABLE IN LIST GETS REPRESENTED AS AN JSON OBJECT IN THE RETURNING ARRAY
-  */
+  // TAKES A LIST OF FORMATABLES AND RETURNS A JSON ARRAY OF JSON OBJECTS
+  // EACH FORMATABLE IN LIST GETS REPRESENTED AS AN JSON OBJECT IN THE RETURNING ARRAY
   private JsonArrayBuilder listOfFormatables2JasonArrayBuilder(List<Formatable> list) {
     JsonArrayBuilder jab = Json.createArrayBuilder();
-    for (Formatable item:list){
-      jab.add(formatable2JasonObject(item));
-    }
+    // for (Formatable item:list){
+    //   jab.add(formatable2JasonObject(item));
+    // }
+    list.forEach(f -> jab.add(formatable2JasonObject(f)));
     return jab;
   }
 
-  /** TAKES A FORMATABLE AND TURNS IT INTO AN JSON OBJECT
-  */
+  // TAKES A FORMATABLE AND TURNS IT INTO AN JSON OBJECT
   private JsonObject formatable2JasonObject(Formatable item) {
     Map<String,String> properties = item.getProperties();
     List<Formatable> subItems = item.getSubItems();
@@ -95,8 +97,7 @@ class JSON_Format implements Format {
     return ob.build();
   }
 
-  /** SORTS A LIST OF FORMATABLES BY ITEM TYPE
-  */
+  // SORTS A LIST OF FORMATABLES BY ITEM TYPE
   private void sortFormatables(List<Formatable> currentList) {
     sortedFormatables = new HashMap<>();
     for (Formatable dataCarrier : currentList) {
@@ -110,8 +111,7 @@ class JSON_Format implements Format {
     }
   }
 
-  /** RETURNS A LIST OF STRINGS CONTAINING UNIQE SUBITEM TYPES FROM A FORMATABLE
-  */
+  // RETURNS A LIST OF STRINGS CONTAINING UNIQE SUBITEM TYPES FROM A FORMATABLE
   private List<String> collectSubItemTypes(Formatable item) {
     return item.getSubItems().stream()
             .map(i -> i.getItemType())
