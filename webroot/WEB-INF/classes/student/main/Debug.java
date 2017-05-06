@@ -1,6 +1,11 @@
 package student.main;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class Debug {
+
+  private static final String DELIMITER = ":    ";
 
   private Debug() {}
 
@@ -8,7 +13,7 @@ public class Debug {
   */
   public static void stdout(String message) {
     if (doDebug()) {
-      System.out.println(message);
+      System.out.println(timeStamp() + DELIMITER + message);
     }
   }
 
@@ -16,7 +21,7 @@ public class Debug {
   */
   public static void stderr(String message) {
     if (doDebug()) {
-      System.err.println(message);
+      System.err.println(timeStamp() + DELIMITER + message);
     }
   }
 
@@ -28,6 +33,12 @@ public class Debug {
     } else {
       return false;
     }
+  }
+
+  private static String timeStamp() {
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+    LocalDateTime now = LocalDateTime.now();
+    return dtf.format(now);
   }
 
 }
