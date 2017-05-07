@@ -5,7 +5,7 @@ rm students
 
 
 # CREATE NEW STUDENTS DATABASE...
-sqlite3 students < createStudentsDB.sql && \
+sqlite3 students < createStudentsDB_SQLITE.sql && \
 sqlite3 students < DbFiller/fill.sql
 
 

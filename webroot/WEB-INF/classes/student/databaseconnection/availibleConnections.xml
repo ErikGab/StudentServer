@@ -3,5 +3,5 @@
     <comment> classname :: connectionstring :: enabled(true|false)</comment>
     <entry key="sqlite">student.databaseconnection.SQLiteConnection::students::true</entry>
     <entry key="mssql">student.databaseconnection.MSSQLConnection:://127.0.0.1\\SQLEXPRESS:59462;databaseName=students::false</entry>
-    <entry key="pgsql">student.databaseconnection.PGSQLConnection:://5.150.225.232\\students::false</entry>
+    <entry key="pgsql">student.databaseconnection.PGSQLConnection:://192.168.1.54/students::true</entry>
 </properties>

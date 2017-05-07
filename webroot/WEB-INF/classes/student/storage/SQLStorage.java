@@ -72,9 +72,9 @@ public class SQLStorage implements StudentStorage {
         returningList.add(new StdItem("student", currentStudentID, properties, subItems));
       }
     } catch (DBConnectionException dbe) {
-  		Debug.stderr("DATABASE CONNECTION ERROR: " + dbe.getMessage());
+  		Debug.stderr("DATABASE CONNECTION ERROR: " + dbe.getMessage()); //Note to self throw storageException!!
   	} catch (SQLException sqle) {
-  		Debug.stderr("SQL ERROR: " + sqle.getMessage());
+  		Debug.stderr("SQL ERROR: " + sqle.getMessage()); //Note to self throw storageException!!
     }
     return returningList;
   }
@@ -103,9 +103,9 @@ public class SQLStorage implements StudentStorage {
         returningList.add(new StdItem("student", currentStudentID, properties));
       }
     } catch (DBConnectionException dbe) {
-  		Debug.stderr("DATABASE CONNECTION ERROR: " + dbe.getMessage());
+  		Debug.stderr("DATABASE CONNECTION ERROR: " + dbe.getMessage()); //Note to self throw storageException!!
     } catch (SQLException sqle) {
-  		Debug.stderr("SQL ERROR: " + sqle.getMessage());
+  		Debug.stderr("SQL ERROR: " + sqle.getMessage()); //Note to self throw storageException!!
     }
     return returningList;
   }
@@ -149,9 +149,9 @@ public class SQLStorage implements StudentStorage {
         returningList.add(new StdItem("course", currentCourseID, properties, subItems));
       }
     } catch (DBConnectionException dbe) {
-  		Debug.stderr("DATABASE CONNECTION ERROR: " + dbe.getMessage());
+  		Debug.stderr("DATABASE CONNECTION ERROR: " + dbe.getMessage()); //Note to self throw storageException!!
   	} catch (SQLException sqle) {
-  		Debug.stderr("SQL ERROR: " + sqle.getMessage());
+  		Debug.stderr("SQL ERROR: " + sqle.getMessage()); //Note to self throw storageException!!
   	}
     return returningList;
   }
@@ -179,9 +179,9 @@ public class SQLStorage implements StudentStorage {
         returningList.add(new StdItem("course", currentCourseID, properties));
       }
     } catch (DBConnectionException dbe) {
-  	  Debug.stderr("DATABASE CONNECTION ERROR: " + dbe.getMessage());
+  	  Debug.stderr("DATABASE CONNECTION ERROR: " + dbe.getMessage()); //Note to self throw storageException!!
   	} catch (SQLException sqle) {
-  	  Debug.stderr("SQL ERROR: " + sqle.getMessage());
+  	  Debug.stderr("SQL ERROR: " + sqle.getMessage()); //Note to self throw storageException!!
   	}
     return returningList;
   }
