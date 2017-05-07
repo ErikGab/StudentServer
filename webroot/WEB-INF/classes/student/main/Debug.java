@@ -10,6 +10,8 @@ public class Debug {
   private Debug() {}
 
   /** Prints to STDOUT if Debug is active ( -Ddebug=true )
+  *
+  * @param message debugmessage.
   */
   public static void stdout(String message) {
     if (doDebug()) {
@@ -18,10 +20,12 @@ public class Debug {
   }
 
   /** Prints to STDERR if Debug is active ( -Ddebug=true )
+  *
+  * @param errorMessage errormessage
   */
-  public static void stderr(String message) {
+  public static void stderr(String errorMessage) {
     if (doDebug()) {
-      System.err.println(timeStamp() + DELIMITER + message);
+      System.err.println(timeStamp() + DELIMITER + errorMessage);
     }
   }
 
@@ -37,8 +41,7 @@ public class Debug {
 
   private static String timeStamp() {
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-    LocalDateTime now = LocalDateTime.now();
-    return dtf.format(now);
+    return dtf.format(LocalDateTime.now());
   }
 
 }

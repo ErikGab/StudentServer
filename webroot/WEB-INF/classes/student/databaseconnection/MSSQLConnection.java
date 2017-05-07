@@ -26,7 +26,7 @@ public class MSSQLConnection implements DatabaseConnection {
 			connectionProperties.loadFromXML(
               new FileInputStream("src/main/java/app/dbconn/availibleConnections.xml"));
 			String urlFromFile = connectionProperties.getProperty("mssql").split("::")[1];
-			DatabaseConnectionFactory.registerDriver("mssql", new MSSQLConnection(urlFromFile));
+			DatabaseConnectionFactory.registerConnection("mssql", new MSSQLConnection(urlFromFile));
 		} catch (FileNotFoundException e) {
 			Debug.stderr("availibleConnections.xml settings file missing.");
 		} catch (IOException ie) {
@@ -55,11 +55,12 @@ public class MSSQLConnection implements DatabaseConnection {
 
   /** Executes a query that should return an answer, answer is returned as a ResultSet
   *
+  * @param query a SELECT SQL query.
   */
 	public ResultSet runSelectQuery(String query) throws DBConnectionException {
 	    try {
 	        stmt = conn.createStatement();
-	        rs = null; //Hur tänkte jag här? varför behövs denna rad?
+	        rs = null; //reset ResultSet...Is this really needed?
 	        rs = stmt.executeQuery(query);
 	    } catch (Exception e) {
 	        throw new DBConnectionException(e.getMessage());
@@ -69,6 +70,7 @@ public class MSSQLConnection implements DatabaseConnection {
 
   /** Executes a query that should NOT return an answer.
   *
+  * @param query a SQL query that should not return a result ie UPDATE, INSERT, DELETE
   */
   public void runNonSelectQuery(String query) throws DBConnectionException {
 	    try {

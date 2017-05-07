@@ -23,5 +23,5 @@ javac -cp $CLASSPATH  webroot/WEB-INF/classes/student/*/*.java
 TESTCLASSPATH=".:junit-4.12.jar:hamcrest-core-1.3.jar:webroot/WEB-INF/classes:webroot/WEB-INF/lib/*"
 java -Ddebug=false -cp $TESTCLASSPATH org.junit.runner.JUnitCore  student.storage.StorageFactoryTest \
                                                     student.storage.SQLStorageTest \
-                                                    student.format.JSON_FormatTest && \
-java -Ddebug=true -Ddriver=sqlite -jar jenkins-winstone-0.9.10-jenkins-47.jar --webroot=webroot
+                                                    student.format.JSONFormatterTest && \
+java -Ddebug=true -Dconnection=sqlite -jar jenkins-winstone-0.9.10-jenkins-47.jar --webroot=webroot

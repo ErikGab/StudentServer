@@ -2,6 +2,7 @@
 <properties>
  <entry key="400">Bad Request. Invalid parameters </entry>
  <entry key="501">Not Implemented. Requested format not supported.</entry>
+ <entry key="415">Requested format not supported.</entry>
  <entry key="404">No data available for requested id </entry>
  <entry key="500">Internal server error: Could not connect to storage</entry>
  <entry key="200">OK.</entry>

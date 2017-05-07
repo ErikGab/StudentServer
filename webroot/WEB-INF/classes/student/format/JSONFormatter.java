@@ -15,25 +15,28 @@ import java.util.HashMap;
 import java.util.stream.Collectors;
 import student.format.Formatable;
 
-class JSON_Format implements Format {
+class JSONFormatter implements Formatter {
 
   static {
-    FormatFactory.register("json", new JSON_Format());
+    FormatterFactory.register("json", new JSONFormatter());
   }
 
   private StringBuilder page;
   private Map<String,List<Formatable>> sortedFormatables;
 
-  private JSON_Format() {};
+  private JSONFormatter() {};
 
   /** Wraps the input message with json and returns it
-  /
+  *
+  * @param message the string that should be wrapped in JSON
   */
   public String formatMessage(String message) {
     return "{\"error\":[{\"message\":\"" + message + "\"}]}";
   }
 
   /** Coverts a list of formatables to a JSON string...LIKA A BOSS
+  *
+  * @param listOfFormatables list that shoud be formatted to JSON
   */
   public String formatList(List<Formatable> listOfFormatables) {
     page = new StringBuilder();

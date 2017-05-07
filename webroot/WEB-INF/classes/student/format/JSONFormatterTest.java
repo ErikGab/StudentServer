@@ -16,7 +16,7 @@ import student.storage.MockDataStorage;
 import student.storage.StorageFactory;
 import student.storage.StudentStorageException;
 
-public class JSON_FormatTest {
+public class JSONFormatterTest {
 
 
   @Test
@@ -24,7 +24,7 @@ public class JSON_FormatTest {
     StudentStorage storage = StorageFactory.getStorage("MockData");
     MockDataStorage verifiedStorage = (MockDataStorage) storage;
     List<Formatable> testcase = verifiedStorage.getStudentsByCourse(5);
-    String json = FormatFactory.getFormat("json").formatList(testcase);
+    String json = FormatterFactory.getFormatter("json").formatList(testcase);
     JsonReader jsonReader = Json.createReader(new StringReader(json));
     JsonObject obj = jsonReader.readObject();
     jsonReader.close();
@@ -36,7 +36,7 @@ public class JSON_FormatTest {
     StudentStorage storage = StorageFactory.getStorage("MockData");
     MockDataStorage verifiedStorage = (MockDataStorage) storage;
     List<Formatable> testcase = verifiedStorage.getStudentsByCourse(5);
-    String json = FormatFactory.getFormat("json").formatList(testcase);
+    String json = FormatterFactory.getFormatter("json").formatList(testcase);
     JsonReader jsonReader = Json.createReader(new StringReader(json));
     JsonObject obj = jsonReader.readObject();
     jsonReader.close();
@@ -49,7 +49,7 @@ public class JSON_FormatTest {
     StudentStorage storage = StorageFactory.getStorage("MockData");
     MockDataStorage verifiedStorage = (MockDataStorage) storage;
     List<Formatable> testcase = verifiedStorage.getCoursesByYear(5);
-    String json = FormatFactory.getFormat("json").formatList(testcase);
+    String json = FormatterFactory.getFormatter("json").formatList(testcase);
     JsonReader jsonReader = Json.createReader(new StringReader(json));
     JsonObject obj = jsonReader.readObject();
     jsonReader.close();
@@ -62,7 +62,7 @@ public class JSON_FormatTest {
     StudentStorage storage = StorageFactory.getStorage("MockData");
     MockDataStorage verifiedStorage = (MockDataStorage) storage;
     List<Formatable> testcase = verifiedStorage.getStudent(5);
-    String json = FormatFactory.getFormat("json").formatList(testcase);
+    String json = FormatterFactory.getFormatter("json").formatList(testcase);
     JsonReader jsonReader = Json.createReader(new StringReader(json));
     JsonObject obj = jsonReader.readObject();
     jsonReader.close();
@@ -75,7 +75,7 @@ public class JSON_FormatTest {
     StudentStorage storage = StorageFactory.getStorage("MockData");
     MockDataStorage verifiedStorage = (MockDataStorage) storage;
     List<Formatable> testcase = verifiedStorage.getStudent(5);
-    String json = FormatFactory.getFormat("json").formatList(testcase);
+    String json = FormatterFactory.getFormatter("json").formatList(testcase);
     JsonReader jsonReader = Json.createReader(new StringReader(json));
     JsonObject obj = jsonReader.readObject();
     jsonReader.close();

@@ -7,12 +7,16 @@ public class ResponseUtil {
   private ResponseUtil() {}
 
   /** Returns a string containing errormessage for requested error code
+  *
+  * @param code int ie 404
   */
   public static String getErrorMessage(int code) {
     return getErrorMessage(String.valueOf(code));
   }
 
   /** Returns a string containing errormessage for requested error code
+  *
+  * @param code string ie "404"
   */
   public static String getErrorMessage(String code) {
     String message;

@@ -1,15 +1,25 @@
 LICENSE: GPL
+AUTHOR: Erik Gabrielsson
 
-  Used licensed software:
-   * Winstone  LGPL license, read more at http://winstone.sourceforge.net/#license
-
-
-Not included dependencies:
-
- * SQLite3
- * Bash
- * Java jre-8
- * Java jdk-8
-
-Start:
+Start Server:
  run cleanBuildRun.sh
+
+ or
+
+ run Start.sh [param=value] [param=value] [param=value]
+ example: "./Start.sh debug=true storage=MockData"
+
+
+Params:
+
+All params are optional, if not set default value will be used.
+
+  param       value       comment
+  ----------------------------------------------------------------
+  storage     SQL         default
+              MockData
+
+  debug       true
+              false       default
+
+  connection  sqlite      default, only used with SQL storage

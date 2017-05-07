@@ -22,20 +22,22 @@ import java.io.StringWriter;
 import student.main.Debug;
 import java.util.stream.Collectors;
 
-class XML_Format implements Format {
+class XMLFormatter implements Formatter {
 
   private Map<String, List<Formatable>> sortedFormatables;
   private Document doc;
 
-  private static XML_Format instance;
+  private static XMLFormatter instance;
   static {
-    instance = new XML_Format();
-    FormatFactory.register("xml", instance);
+    instance = new XMLFormatter();
+    FormatterFactory.register("xml", instance);
   }
 
-  private XML_Format() {};
+  private XMLFormatter() {};
 
-  /** Wraps a message in XML and returns it
+  /** Wraps a message in XML and returns it.
+  *
+  * @param message string that should be wrapped in XML.
   */
   public String formatMessage(String message) {
     StringBuilder page = new StringBuilder();
@@ -48,6 +50,7 @@ class XML_Format implements Format {
 
   /** Returns a string containing XML describing the content if input list
   *
+  * @param listOfFormatables list that shoud be formatted to XML.
   */
   public String formatList(List<Formatable> listOfFormatables) {
     sortFormatables(listOfFormatables);

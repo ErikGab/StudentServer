@@ -13,24 +13,29 @@ public class FormatService {
 
   /** Turns a List of Formatables to a string formatted in requested format
   *
+  * @param listOfFormatables a list of formatables that shuld be formatted to requested format.
+  * @param format the format that should be returned.
   */
   public static String formatList(List<Formatable> listOfFormatables, String format)
           throws FormatException {
-    Format requestedFormat = FormatFactory.getFormat(format);
-    return requestedFormat.formatList(listOfFormatables);
+    Formatter requestedFormatter = FormatterFactory.getFormatter(format);
+    return requestedFormatter.formatList(listOfFormatables);
   }
 
   /** Wraps a Message as a formatted string in requested format
   *
+  * @param message the message that should be formatted to requested format.
+  * @param format the format that should be returned.
   */
   public static String formatMessage(String message, String format)
           throws FormatException {
-    Format requestedFormat = FormatFactory.getFormat(format);
-    return requestedFormat.formatMessage(message);
+    Formatter requestedFormatter = FormatterFactory.getFormatter(format);
+    return requestedFormatter.formatMessage(message);
   }
 
   /** Returns contenttpe as a string for requested format
   *
+  * @param format the format which content type should be returned.
   */
   public static String getContentType(String format) {
     String contentTypeString = "";

@@ -17,12 +17,12 @@ public class StudentService {
 
   private static StudentStorage storage;
   private static StudentService instance;
+  private static final String DEFAULTSTORAGE = "SQL";
 
   static {
     instance = new StudentService();
     try {
-      //2DO remove hardcoding of SQL. make -D input set storagetype
-      storage = StorageFactory.getStorage("SQL");
+      storage = StorageFactory.getStorage(initalStorage());
     } catch (StudentStorageException sse) {
       Debug.stderr(sse.getMessage());
     }
@@ -146,13 +146,23 @@ public class StudentService {
     return intId;
   }
 
-  //2DO this is never called. Should an APImethod be added to reach this?
+  //2DO this is never called. Should an APImethod be added to reach this? Add a spesific Admin-API?
   //...or should this be remvoved?
   private void changeStorage(String type) {
     try {
       storage = StorageFactory.getStorage(type);
     } catch (StudentStorageException sse) {
       Debug.stderr(sse.getMessage());
+    }
+  }
+
+  //checks if  specific storagetype is requested, if not default is used.
+  private static String initalStorage() {
+    String storage = System.getProperty("storage");
+    if (storage == null) {
+      return DEFAULTSTORAGE;
+    } else {
+      return storage;
     }
   }
 

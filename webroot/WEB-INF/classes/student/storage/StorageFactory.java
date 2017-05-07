@@ -31,6 +31,9 @@ public class StorageFactory {
     }
   }
 
+  /** returns a student storage
+  *
+  */
   public static StudentStorage getStorage() throws StudentStorageException {
     if (storageMap.isEmpty()) {
       throw new StudentStorageException("No storage availible");
@@ -39,6 +42,10 @@ public class StorageFactory {
     }
   }
 
+  /** returns a student storage of requested type.
+  *
+  * @param type requested storage type
+  */
   public static StudentStorage getStorage(String type) throws StudentStorageException {
     if (storageMap.containsKey(type)) {
       return storageMap.get(type);
@@ -47,6 +54,11 @@ public class StorageFactory {
     }
   }
 
+  /** registers a student storage instance.
+  *
+  * @param key name of StudentStorage to register.
+  * @param storageInstance instance to register.
+  */
   public static void register(String key, StudentStorage storageInstance) {
     Debug.stdout("New storage registerd: " + key);
     storageMap.put(key,storageInstance);

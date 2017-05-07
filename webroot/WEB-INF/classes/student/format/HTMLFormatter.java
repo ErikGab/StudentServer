@@ -6,10 +6,10 @@ import java.util.Map;
 import java.util.HashMap;
 import student.format.Formatable;
 
-class HTML_Format implements Format {
+class HTMLFormatter implements Formatter {
 
   static {
-    FormatFactory.register("html", new HTML_Format());
+    FormatterFactory.register("html", new HTMLFormatter());
   }
 
   private StringBuilder page;
@@ -17,10 +17,11 @@ class HTML_Format implements Format {
   private List<String> subItemHeaders;
   private Map<String,List<Formatable>> sortedFormatables;
 
-  private HTML_Format() {};
+  private HTMLFormatter() {};
 
   /** Wraps the input message with html and returns it
-  /
+  *
+  * @param message string that should be returned wrapped in HTML.
   */
   public String formatMessage(String message) {
     resetPage();
@@ -48,6 +49,7 @@ class HTML_Format implements Format {
 
   /** Formats input list of formatables into a formatted string containing HTML data.
   *
+  * @param listOfFormatables list of formatables thas should be formatted to HTML.
   */
   public String formatList(List<Formatable> listOfFormatables) {
     resetPage();

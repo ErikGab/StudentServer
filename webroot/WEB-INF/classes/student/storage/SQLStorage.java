@@ -29,6 +29,8 @@ public class SQLStorage implements StudentStorage {
 
   /** Executes an SQL query to get students by id.
   *   returns students as a list of Formatabels.
+  *
+  * @param id studentID, 0 = all
   */
   public List<Formatable> getStudent(int id) {
     List<Formatable> returningList = new ArrayList<>();
@@ -79,6 +81,8 @@ public class SQLStorage implements StudentStorage {
 
   /** Executes an SQL query to get students by course.
   *   returns students as a list of Formatabels.
+  *
+  * @param id courseID, 0 = all
   */
   public List<Formatable> getStudentsByCourse(int id) {
     List<Formatable> returningList = new ArrayList<>();
@@ -108,6 +112,8 @@ public class SQLStorage implements StudentStorage {
 
   /** Executes an SQL query to get course by id.
   *   returns courses as a list of Formatabels.
+  *
+  * @param id courseID, 0 = all
   */
   public List<Formatable> getCourse(int id){
     List<Formatable> returningList = new ArrayList<>();
@@ -152,6 +158,8 @@ public class SQLStorage implements StudentStorage {
 
   /** Executes an SQL query to get course by year.
   *   returns courses as a list of Formatabels.
+  *
+  * @param id year as four digit int (YYYY) ie 2015, 0 = all
   */
   public List<Formatable> getCoursesByYear(int id) {
     List<Formatable> returningList = new ArrayList<>();

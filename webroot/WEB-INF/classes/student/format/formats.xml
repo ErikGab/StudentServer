@@ -1,7 +1,7 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
     <comment>The following formats and classes exist</comment>
-    <entry key="xml">student.format.XML_Format</entry>
-    <entry key="json">student.format.JSON_Format</entry>
-    <entry key="html">student.format.HTML_Format</entry>
+    <entry key="xml">student.format.XMLFormatter</entry>
+    <entry key="json">student.format.JSONFormatter</entry>
+    <entry key="html">student.format.HTMLFormatter</entry>
 </properties>

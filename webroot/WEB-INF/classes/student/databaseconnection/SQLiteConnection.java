@@ -25,7 +25,7 @@ public class SQLiteConnection implements DatabaseConnection {
 			Properties connectionProperties = new Properties();
 			connectionProperties.loadFromXML(new FileInputStream(CONNECTIONS_XML));
 			String urlFromFile = connectionProperties.getProperty("sqlite").split("::")[1];
-			DatabaseConnectionFactory.registerDriver("sqlite", new SQLiteConnection(urlFromFile));
+			DatabaseConnectionFactory.registerConnection("sqlite", new SQLiteConnection(urlFromFile));
 		} catch (FileNotFoundException e) {
 			Debug.stderr("SQLiteConnection: availibleConnections.xml settings file missing." + e);
 		} catch (IOException ie) {
@@ -52,6 +52,7 @@ public class SQLiteConnection implements DatabaseConnection {
 
   /** Executes a query that should return an answer, answer is returned as a ResultSet
   *
+  * @param query a SELECT SQL query.
   */
 	public ResultSet runSelectQuery(String query) throws DBConnectionException {
     rs = null;
@@ -66,6 +67,7 @@ public class SQLiteConnection implements DatabaseConnection {
 
   /** Executes a query that should NOT return an answer.
   *
+  * @param query a SQL query that should not return a result ie UPDATE, INSERT, DELETE
   */
   public void runNonSelectQuery(String query)throws DBConnectionException {
 	  try {

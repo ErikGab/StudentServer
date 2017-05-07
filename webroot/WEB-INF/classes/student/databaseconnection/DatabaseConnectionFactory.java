@@ -8,10 +8,10 @@ public class DatabaseConnectionFactory {
 
 	static private final String CONNECTIONS_XML =
           "webroot/WEB-INF/classes/student/databaseconnection/availibleConnections.xml";
-	static private final String DEFAULTDRIVER = "sqlite";
+	static private final String DEFAULTCONNECTION = "sqlite";
 	static private Map<String, DatabaseConnection> connections = new HashMap<>();
 
-  // Reads connections-xml and loads "active" drivers into JVM
+  // Reads connections-xml and loads "active" connections into JVM
 	static {
 		try {
 			Properties connectionProperties = new Properties();
@@ -36,28 +36,31 @@ public class DatabaseConnectionFactory {
 
   /** Loaded drivers use this method to register their existence to this Factory
   *
+  * @param connectionName name of DatabaseConnection to register
+  * @param connection a DatabaseConnection instance to register
   */
-	public static void registerDriver(String drivername, DatabaseConnection connection) {
-		Debug.stdout("New DB connection registerd: " + drivername);
-		connections.put(drivername, connection);
+	public static void registerConnection(String connectionName, DatabaseConnection connection) {
+		Debug.stdout("New DB connection registerd: " + connectionName);
+		connections.put(connectionName, connection);
 	}
 
 	private DatabaseConnectionFactory() {};
 
-  /** Returns requested (-D at startup) driver if found. If requested driver is not found
-  * a defaultdriver is returned.
+  /** Returns requested (-D at startup) connection if found. If requested connection is not found
+  * a defaultconnection is returned.
   */
 	public static DatabaseConnection getDatabaseConnection() throws DBConnectionException {
-    String driver = System.getProperty("driver");
-		if (connections.containsKey(driver)) {
-			Debug.stdout("Returning requested driver: " + driver);
-      return connections.get(driver);
-		} else if (connections.containsKey(DEFAULTDRIVER)) {
-			Debug.stderr(driver + " driver not found.\nReturning default driver: " + DEFAULTDRIVER);
-      return connections.get(DEFAULTDRIVER);
+    String connection = System.getProperty("connection");
+		if (connections.containsKey(connection)) {
+			Debug.stdout("Returning requested connection: " + connection);
+      return connections.get(connection);
+		} else if (connections.containsKey(DEFAULTCONNECTION)) {
+			Debug.stderr(connection + " connection not found. Returning default connection: " +
+              DEFAULTCONNECTION);
+      return connections.get(DEFAULTCONNECTION);
     } else {
-			Debug.stderr("No suitable driver found: " + driver);
-			throw new DBConnectionException("No " + driver + " support availible.");
+			Debug.stderr("No suitable connection found: " + connection);
+			throw new DBConnectionException("No " + connection + " support availible.");
 		}
 	}
 

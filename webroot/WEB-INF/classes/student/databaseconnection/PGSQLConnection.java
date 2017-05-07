@@ -32,7 +32,7 @@ public class PGSQLConnection implements DatabaseConnection {
 			connectionProperties.loadFromXML(
               new FileInputStream("src/main/java/app/dbconn/availibleConnections.xml"));
 			String urlFromFile = connectionProperties.getProperty("mssql").split("::")[1];
-			DatabaseConnectionFactory.registerDriver("mssql", new PGSQLConnection(urlFromFile));
+			DatabaseConnectionFactory.registerConnection("pgsql", new PGSQLConnection(urlFromFile));
 		} catch (FileNotFoundException e) {
 			Debug.stderr("availibleConnections.xml settings file missing.");
 		} catch (IOException ie) {
@@ -61,6 +61,7 @@ public class PGSQLConnection implements DatabaseConnection {
 
   /** Executes a query that should return an answer, answer is returned as a ResultSet
   *
+  * @param query a SELECT SQL query.
   */
 	public ResultSet runSelectQuery(String query) throws DBConnectionException {
 	    try {
@@ -75,6 +76,7 @@ public class PGSQLConnection implements DatabaseConnection {
 
   /** Executes a query that should NOT return an answer.
   *
+  * @param query a SQL query that should not return a result ie UPDATE, INSERT, DELETE
   */
   public void runNonSelectQuery(String query) throws DBConnectionException {
 	    try {
