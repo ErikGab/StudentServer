@@ -1,6 +1,6 @@
 LICENSE: GPL
 AUTHOR: Erik Gabrielsson
-        eho.gabrielsson at gmail dot com
+        eho.gabrielsson at google mail dot com
 
 Start Server:
  run cleanBuildRun.sh
@@ -17,15 +17,15 @@ All params are optional, if not set default value will be used.
 
   param       value       comment
   ----------------------------------------------------------------
-  storage     SQL         default
+  storage     SQL         Default
               MockData
 
   debug       true
-              false       default
+              false       Default
 
-  connection  sqlite      default, only used with SQL storage.
-              pgsql       only used with SQL storage. server will send status 500 if pgsql db not
-                          not available. see availibleConnections.xml
+  connection  sqlite      Default, only used with SQL storage.
+              pgsql       Only used with SQL storage. Server will send status 500 if
+                          pgsql db is not available. see availibleConnections.xml
 
 
 
