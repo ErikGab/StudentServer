@@ -88,9 +88,22 @@ public class PGSQLConnection implements DatabaseConnection {
 	  }
 	}
 
+  //Connection might get closed due to inactivity or other reasons...
   private void connectIfneeded() throws DBConnectionException {
-    if (conn == null) {
-      getConnected(url);
+    int retries = 0;
+    while (true) {
+      try {
+        if (conn == null || !conn.isValid(2)) {
+          getConnected(url);
+        }
+        break;
+      } catch (SQLException sqle) {
+        retries++;
+        Debug.stderr("PGSQL Connection: Reconnecting...");
+        if (retries > 2) {
+          throw new DBConnectionException("Can't estabish a connection to DB.");
+        }
+      }
     }
   }
 
