@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+<servlet>
+  <servlet-name>StudentServiceAPI</servlet-name>
+  <servlet-class>student.servlets.StudentServiceAPI</servlet-class>
+</servlet>
+<servlet>
+  <servlet-name>StudentServiceADMIN</servlet-name>
+  <servlet-class>student.servlets.StudentServiceADMIN</servlet-class>
+</servlet>
+<servlet-mapping>
+   <servlet-name>StudentServiceAPI</servlet-name>
+   <url-pattern>/StudentServiceAPI</url-pattern>
+</servlet-mapping>
+<servlet-mapping>
+   <servlet-name>StudentServiceADMIN</servlet-name>
+   <url-pattern>/StudentServiceADMIN</url-pattern>
+</servlet-mapping>
+</web-app>

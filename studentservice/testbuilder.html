@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Customize API test</title>
+</head>
+<body>
+    <form action="http://127.0.0.1:8080/StudentServiceAPI" method="GET" target="result">
+        REQUEST:
+        <input type="radio" name="type" value="student"> student
+        <input type="radio" name="type" value="course"> course
+        <br><br>BY:
+        <input type="checkbox" name="by" value="course"> course
+        <input type="checkbox" name="by" value="year"> year
+        <br><br>IN FORMAT:
+        <input type="radio" name="format" value="json"> json
+        <input type="radio" name="format" value="xml"> xml
+        <input type="radio" name="format" value="html"> html
+        <br><br>WITH ID:  <input type="text" name="id" /> <input type="submit" name="submit" value="Submit" />
+    </form>
+</body>
+</html>
