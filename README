@@ -5,7 +5,7 @@ AUTHOR: Erik Gabrielsson
 Start Server:
  run cleanBuildRun.sh
 
- or
+ or (if already built)
 
  run Start.sh [param=value] [param=value] [param=value]
  example: "./Start.sh debug=true storage=MockData"
@@ -23,7 +23,9 @@ All params are optional, if not set default value will be used.
   debug       true
               false       default
 
-  connection  sqlite      default, only used with SQL storage
+  connection  sqlite      default, only used with SQL storage.
+              pgsql       only used with SQL storage. server will send status 500 if pgsql db not
+                          not available. see availibleConnections.xml
 
 
 
@@ -39,3 +41,8 @@ ALPHA ADMIN INTERFACE:
 
   WARNING! Limited Input control.
   However: cleanBuildRun.sh resets Database.
+  Auto reset of database is only active for SQLITE. PGSQL reset is manually triggered.
+  Therefore admin of pgsql is currently forbidden (Status 403).
+
+  only add course/student implemented so far,
+  remove course/student not yet implemented.

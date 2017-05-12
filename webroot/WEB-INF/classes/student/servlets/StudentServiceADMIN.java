@@ -40,11 +40,16 @@ public class StudentServiceADMIN extends HttpServlet {
                       java.nio.charset.StandardCharsets.UTF_8), true);
       String apiKey = String.valueOf(request.getParameter("submit"));
       Debug.stdout("ADMIN Request with apiKey = " + apiKey);
-      if (apiMethods.keySet().contains(apiKey)) {
-        responseWriter.println(apiMethods.get(apiKey).respondToRequest(request, response));
+      if (System.getProperty("connection").equals("pgsql")) {
+        responseWriter.println(service.formatError(response.SC_FORBIDDEN,
+                "html", response));
       } else {
-        responseWriter.println(service.formatError(response.SC_BAD_REQUEST,
-                request.getParameter("format"), response));
+        if (apiMethods.keySet().contains(apiKey)) {
+          responseWriter.println(apiMethods.get(apiKey).respondToRequest(request, response));
+        } else {
+          responseWriter.println(service.formatError(response.SC_BAD_REQUEST,
+                  "html", response));
+        }
       }
       responseWriter.close();
     } catch (IOException ioe) {
