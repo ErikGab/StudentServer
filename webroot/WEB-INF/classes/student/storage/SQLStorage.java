@@ -32,7 +32,7 @@ public class SQLStorage implements StudentStorage {
   *
   * @param id studentID, 0 = all
   */
-  public List<Formatable> getStudent(int id) {
+  public List<Formatable> getStudent(int id) throws StudentStorageException {
     List<Formatable> returningList = new ArrayList<>();
     String query;
     if (id == 0) {
@@ -72,9 +72,11 @@ public class SQLStorage implements StudentStorage {
         returningList.add(new StdItem("student", currentStudentID, properties, subItems));
       }
     } catch (DBConnectionException dbe) {
-  		Debug.stderr("DATABASE CONNECTION ERROR: " + dbe.getMessage()); //Note to self throw storageException!!
+  		Debug.stderr("DATABASE CONNECTION ERROR: " + dbe.getMessage());
+      throw new StudentStorageException("DATABASE CONNECTION ERROR");
   	} catch (SQLException sqle) {
-  		Debug.stderr("SQL ERROR: " + sqle.getMessage()); //Note to self throw storageException!!
+  		Debug.stderr("SQL ERROR: " + sqle.getMessage());
+      throw new StudentStorageException("SQL ERROR");
     }
     return returningList;
   }
@@ -84,7 +86,7 @@ public class SQLStorage implements StudentStorage {
   *
   * @param id courseID, 0 = all
   */
-  public List<Formatable> getStudentsByCourse(int id) {
+  public List<Formatable> getStudentsByCourse(int id) throws StudentStorageException {
     List<Formatable> returningList = new ArrayList<>();
     String query;
     if (id == 0) {
@@ -103,9 +105,11 @@ public class SQLStorage implements StudentStorage {
         returningList.add(new StdItem("student", currentStudentID, properties));
       }
     } catch (DBConnectionException dbe) {
-  		Debug.stderr("DATABASE CONNECTION ERROR: " + dbe.getMessage()); //Note to self throw storageException!!
+  		Debug.stderr("DATABASE CONNECTION ERROR: " + dbe.getMessage());
+      throw new StudentStorageException("DATABASE CONNECTION ERROR");
     } catch (SQLException sqle) {
-  		Debug.stderr("SQL ERROR: " + sqle.getMessage()); //Note to self throw storageException!!
+  		Debug.stderr("SQL ERROR: " + sqle.getMessage());
+      throw new StudentStorageException("SQL ERROR");
     }
     return returningList;
   }
@@ -115,7 +119,7 @@ public class SQLStorage implements StudentStorage {
   *
   * @param id courseID, 0 = all
   */
-  public List<Formatable> getCourse(int id){
+  public List<Formatable> getCourse(int id) throws StudentStorageException {
     List<Formatable> returningList = new ArrayList<>();
     String query;
     if (id == 0) {
@@ -149,9 +153,11 @@ public class SQLStorage implements StudentStorage {
         returningList.add(new StdItem("course", currentCourseID, properties, subItems));
       }
     } catch (DBConnectionException dbe) {
-  		Debug.stderr("DATABASE CONNECTION ERROR: " + dbe.getMessage()); //Note to self throw storageException!!
+  		Debug.stderr("DATABASE CONNECTION ERROR: " + dbe.getMessage());
+      throw new StudentStorageException("DATABASE CONNECTION ERROR");
   	} catch (SQLException sqle) {
-  		Debug.stderr("SQL ERROR: " + sqle.getMessage()); //Note to self throw storageException!!
+  		Debug.stderr("SQL ERROR: " + sqle.getMessage());
+      throw new StudentStorageException("SQL ERROR");
   	}
     return returningList;
   }
@@ -161,7 +167,7 @@ public class SQLStorage implements StudentStorage {
   *
   * @param id year as four digit int (YYYY) ie 2015, 0 = all
   */
-  public List<Formatable> getCoursesByYear(int id) {
+  public List<Formatable> getCoursesByYear(int id) throws StudentStorageException {
     List<Formatable> returningList = new ArrayList<>();
     String query;
     if (id == 0) {
@@ -179,11 +185,58 @@ public class SQLStorage implements StudentStorage {
         returningList.add(new StdItem("course", currentCourseID, properties));
       }
     } catch (DBConnectionException dbe) {
-  	  Debug.stderr("DATABASE CONNECTION ERROR: " + dbe.getMessage()); //Note to self throw storageException!!
+  	  Debug.stderr("DATABASE CONNECTION ERROR: " + dbe.getMessage());
+      throw new StudentStorageException("DATABASE CONNECTION ERROR");
   	} catch (SQLException sqle) {
-  	  Debug.stderr("SQL ERROR: " + sqle.getMessage()); //Note to self throw storageException!!
+  	  Debug.stderr("SQL ERROR: " + sqle.getMessage());
+      throw new StudentStorageException("SQL ERROR");
   	}
     return returningList;
+  }
+
+  /** Executes an SQL query to add a course.
+  *
+  * @param startDate String date in format (YYYY-MM-DD)
+  * @param endDate String date in format (YYYY-MM-DD)
+  * @param id subjectID
+  */
+  public void addCourse(String startDate, String endDate, int id) throws StudentStorageException {
+    //
+    // ADD INPUT CONTOL
+    //
+    String basequery = "INSERT INTO tblCourse (fldStartDate, fldEndDate, fldSubjectId) VALUES ";
+    String query = String.format("%s(\"%s\", \"%s\", %d);",basequery, startDate, endDate, id);
+    try {
+      connection.runNonSelectQuery(query);
+    } catch (DBConnectionException dbe) {
+  	  Debug.stderr("DATABASE CONNECTION ERROR: " + dbe.getMessage());
+      throw new StudentStorageException("DATABASE CONNECTION ERROR FOR QUERY " + query);
+  	}
+  }
+
+  /** Executes an SQL query to add a student.
+  *
+  * @param name
+  * @param surname
+  * @param streetAddress
+  * @param postAddress
+  * @param dateOfBirth String date in format (YYYY-MM-DD)
+  */
+  public void addStudent(String name, String surname, String streetAddress, String postAddress,
+          String dateOfBirth) throws StudentStorageException {
+    //
+    // ADD INPUT CONTOL
+    //
+    String basequery = "INSERT INTO tblStudent";
+    String fields = "(fldName, fldSurName, fldBirthdate, fldPostAddress, fldStreetAddress)";
+    String query = String.format("%s %s VALUES (\"%s\", \"%s\", \"%s\", \"%s\", \"%s\");",
+            basequery, fields, name, surname, dateOfBirth, postAddress, streetAddress);
+    try {
+      connection.runNonSelectQuery(query);
+    } catch (DBConnectionException dbe) {
+  	  Debug.stderr("DATABASE CONNECTION ERROR: " + dbe.getMessage());
+      throw new StudentStorageException("DATABASE CONNECTION ERROR FOR QUERY " + query);
+  	}
   }
 
 }

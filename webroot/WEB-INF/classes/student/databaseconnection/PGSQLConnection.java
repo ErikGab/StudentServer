@@ -4,21 +4,20 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.SQLException;
 import java.io.*;
 import java.util.*;
 import student.main.Debug;
 
-import javax.swing.JOptionPane;
-
 public class PGSQLConnection implements DatabaseConnection {
 
-	private Connection conn = null;
-  private String url;
-  private Statement stmt = null;
-  private ResultSet rs = null;
-  private String databaseUserName = "studentservice";
-  private String databasePassword = "ssapipass";
-  static private final String CONNECTIONS_XML =
+	private static Connection conn = null;
+  private static Statement stmt = null;
+  private static ResultSet rs = null;
+  private static String url = null;
+  private static final String DB_USER_NAME = "studentservice";
+  private static final String DB_PASSWORD = "ssapipass";
+  private static final String CONNECTIONS_XML =
           "webroot/WEB-INF/classes/student/databaseconnection/availibleConnections.xml";
   private static final String DB_CONN_STR = "jdbc:postgresql:";
   private static final String DRIVER = "org.postgresql.Driver";
@@ -43,19 +42,19 @@ public class PGSQLConnection implements DatabaseConnection {
 
 	public PGSQLConnection(String database, String host, String port) {
 		url = "jdbc:postgresql://" + host + ":" + port + "/" + database;
-		getConnected(url);
 	}
 
 	public PGSQLConnection(String url) {
-		getConnected(url);
+		this.url = url;
 	}
 
-  private void getConnected(String db) {
+  private void getConnected(String db_url) throws DBConnectionException {
 		try {
-      Debug.stdout("CONNECTING TO: " + DB_CONN_STR + db);
-	    conn = DriverManager.getConnection(DB_CONN_STR + db, databaseUserName, databasePassword);
-		} catch (Exception e) {
+      Debug.stdout("CONNECTING TO: " + DB_CONN_STR + db_url);
+	    conn = DriverManager.getConnection(DB_CONN_STR + db_url, DB_USER_NAME, DB_PASSWORD);
+		} catch (SQLException e) {
 			Debug.stderr("ConnectionError " + e.getMessage());
+      throw new DBConnectionException("Could not connect to database.");
 		}
 	}
 
@@ -64,11 +63,12 @@ public class PGSQLConnection implements DatabaseConnection {
   * @param query a SELECT SQL query.
   */
 	public ResultSet runSelectQuery(String query) throws DBConnectionException {
+    connectIfneeded();
     rs = null;
     try {
 	    stmt = conn.createStatement();
 	    rs = stmt.executeQuery(query);
-	  } catch (Exception e) {
+	  } catch (SQLException e) {
 	    throw new DBConnectionException(e.getMessage());
 	  }
 	  return rs;
@@ -78,14 +78,21 @@ public class PGSQLConnection implements DatabaseConnection {
   *
   * @param query a SQL query that should not return a result ie UPDATE, INSERT, DELETE
   */
-  public void runNonSelectQuery(String query)throws DBConnectionException {
+  public void runNonSelectQuery(String query) throws DBConnectionException {
+    connectIfneeded();
 	  try {
 	    stmt = conn.createStatement();
 	    stmt.executeUpdate(query);
-	  } catch (Exception e) {
+	  } catch (SQLException e) {
 	    throw new DBConnectionException(e.getMessage());
 	  }
 	}
+
+  private void connectIfneeded() throws DBConnectionException {
+    if (conn == null) {
+      getConnected(url);
+    }
+  }
 
 
 }

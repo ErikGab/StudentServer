@@ -59,11 +59,10 @@ ON s.fldStudentId = sc.fldStudentId;
 
 CREATE VIEW vwGetStudentsByAllCourse
 AS
-SELECT  s.fldStudentId,
-        s.fldName,
-        s.fldSurName
-FROM tblStudentCourse AS sc LEFT JOIN tblStudent AS s
-ON s.fldStudentId = sc.fldStudentId;
+SELECT  fldStudentId,
+        fldName,
+        fldSurName
+FROM tblStudent;
 
 CREATE VIEW vwGetStudent
 AS

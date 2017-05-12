@@ -8,8 +8,16 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns
   <servlet-name>StudentServiceAPI</servlet-name>
   <servlet-class>student.servlets.StudentServiceAPI</servlet-class>
 </servlet>
+<servlet>
+  <servlet-name>StudentServiceADMIN</servlet-name>
+  <servlet-class>student.servlets.StudentServiceADMIN</servlet-class>
+</servlet>
 <servlet-mapping>
    <servlet-name>StudentServiceAPI</servlet-name>
    <url-pattern>/StudentServiceAPI</url-pattern>
+</servlet-mapping>
+<servlet-mapping>
+   <servlet-name>StudentServiceADMIN</servlet-name>
+   <url-pattern>/StudentServiceADMIN</url-pattern>
 </servlet-mapping>
 </web-app>

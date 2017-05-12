@@ -1,5 +1,6 @@
 LICENSE: GPL
 AUTHOR: Erik Gabrielsson
+        eho.gabrielsson at gmail dot com
 
 Start Server:
  run cleanBuildRun.sh
@@ -23,3 +24,18 @@ All params are optional, if not set default value will be used.
               false       default
 
   connection  sqlite      default, only used with SQL storage
+
+
+
+MANUAL TEST HELPER:
+
+  http://127.0.0.1:8080/testAPI.html
+
+
+
+ALPHA ADMIN INTERFACE:
+
+  http://127.0.0.1:8080/topSecretAdminInterface.html
+
+  WARNING! Limited Input control.
+  However: cleanBuildRun.sh resets Database.

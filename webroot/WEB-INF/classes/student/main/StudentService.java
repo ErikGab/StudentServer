@@ -94,6 +94,50 @@ public class StudentService {
     }
   }
 
+  /** Takes a HTTP request to add a course...
+  *   ...and persists requested data.
+  */
+  public String addCourse(HttpServletRequest request, HttpServletResponse response) {
+    try {
+      String startDate = request.getParameter("startdate");
+      String endDate = request.getParameter("enddate");
+      int subjectID = Integer.parseInt(request.getParameter("subject"));
+      storage.addCourse(startDate, endDate, subjectID);
+      return FormatService.formatMessage("COURSE ADDED", "html");
+    } catch (StudentStorageException sse) {
+      Debug.stderr(sse.getMessage());
+      return formatError(response.SC_INTERNAL_SERVER_ERROR, "html", response);
+    } catch (NumberFormatException nfe) {
+      return formatError(response.SC_BAD_REQUEST, "html", response);
+    } catch (FormatException fe) {
+      Debug.stderr(fe.getMessage());
+      response.setStatus(response.SC_UNSUPPORTED_MEDIA_TYPE);
+      return ResponseUtil.getErrorMessage(response.SC_UNSUPPORTED_MEDIA_TYPE);
+    }
+  }
+
+  /** Takes a HTTP request to add a student...
+  *   ...and persists requested data.
+  */
+  public String addStudent(HttpServletRequest request, HttpServletResponse response) {
+    try {
+      String name = request.getParameter("name");
+      String surname = request.getParameter("surname");
+      String streetAddress = request.getParameter("streetaddress");
+      String postAddress = request.getParameter("postaddress");
+      String dateOfBirth = request.getParameter("dateofbirth");
+      storage.addStudent(name, surname, streetAddress, postAddress, dateOfBirth);
+      return FormatService.formatMessage("STUDENT ADDED", "html");
+    } catch (StudentStorageException sse) {
+      Debug.stderr(sse.getMessage());
+      return formatError(response.SC_INTERNAL_SERVER_ERROR, "html", response);
+    } catch (FormatException fe) {
+      Debug.stderr(fe.getMessage());
+      response.setStatus(response.SC_UNSUPPORTED_MEDIA_TYPE);
+      return ResponseUtil.getErrorMessage(response.SC_UNSUPPORTED_MEDIA_TYPE);
+    }
+  }
+
   /** Tries to format error message
   *
   */
@@ -105,8 +149,8 @@ public class StudentService {
       return FormatService.formatMessage(ResponseUtil.getErrorMessage(code), format);
     } catch (FormatException fe) {
       Debug.stderr(fe.getMessage());
-      response.setStatus(response.SC_NOT_IMPLEMENTED);
-      return ResponseUtil.getErrorMessage(response.SC_NOT_IMPLEMENTED);
+      response.setStatus(response.SC_UNSUPPORTED_MEDIA_TYPE);
+      return ResponseUtil.getErrorMessage(response.SC_UNSUPPORTED_MEDIA_TYPE);
     }
   }
 
@@ -124,9 +168,9 @@ public class StudentService {
       response.setCharacterEncoding("UTF-8");
     } catch (FormatException fe) {
       Debug.stderr(fe.getMessage());
-      response.setStatus(response.SC_NOT_IMPLEMENTED);
+      response.setStatus(response.SC_UNSUPPORTED_MEDIA_TYPE);
       response.setContentType(FormatService.getContentType(format));
-      return ResponseUtil.getErrorMessage(response.SC_NOT_IMPLEMENTED);
+      return ResponseUtil.getErrorMessage(response.SC_UNSUPPORTED_MEDIA_TYPE);
     }
     return responseData;
   }

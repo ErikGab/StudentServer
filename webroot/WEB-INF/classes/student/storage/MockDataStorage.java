@@ -104,16 +104,21 @@ public class MockDataStorage implements StudentStorage {
         }}));
         StorageFactory.register("MockData", new MockDataStorage());
     }
-    public List<Formatable> getStudent(int id) throws StudentStorageException{
+    public List<Formatable> getStudent(int id) throws StudentStorageException {
         return mockDataFullStudent;
     }
-    public List<Formatable> getCourse(int id) throws StudentStorageException{
+    public List<Formatable> getCourse(int id) throws StudentStorageException {
         return mockDataFullCourse;
     }
-    public List<Formatable> getStudentsByCourse(int id) throws StudentStorageException{
+    public List<Formatable> getStudentsByCourse(int id) throws StudentStorageException {
         return mockDataStudent;
     }
-    public List<Formatable> getCoursesByYear(int id) throws StudentStorageException{
+    public List<Formatable> getCoursesByYear(int id) throws StudentStorageException {
         return mockDataCourse;
+    }
+    public void addCourse(String startDate, String endDate, int id) throws StudentStorageException {
+    }
+    public void addStudent(String name, String surname, String streetAddress, String postAddress,
+            String dateOfBirth) throws StudentStorageException {
     }
 }

@@ -69,7 +69,7 @@ public class SQLiteConnection implements DatabaseConnection {
   *
   * @param query a SQL query that should not return a result ie UPDATE, INSERT, DELETE
   */
-  public void runNonSelectQuery(String query)throws DBConnectionException {
+  public void runNonSelectQuery(String query) throws DBConnectionException {
 	  try {
 	    stmt = conn.createStatement();
 	    stmt.executeUpdate(query);
