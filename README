@@ -1,6 +1,23 @@
-LICENSE: GPL
-AUTHOR: Erik Gabrielsson
-        eho.gabrielsson at google mail dot com
+STUDENTSERVER by Erik Gabrielsson Spring 2017
+LICENSE: GNU GPLv3
+
+Server Application that should provide data to StudentClient. This is a Java Project.
+
+Background:
+        This project is part one (of two) in a school (Yrgo.se) project to create a full stack application.
+        This part is the backend server. To fulfill the acceptance criteria the backend should:
+                * Be based on winstone to provide servlets and host static files. 
+                * It should be able to serve students data from an SQL db using JDBC. 
+                * It should be able to communicate by REST serving XML or Json depending on request.
+                * It had to implement at least one factory pattern and one Singleton pattern. 
+                * Servlet code has to be clean from JDBC code.
+                * Use google code standard and resonably commented.
+                * Buildable and runnable from bash command line interface.
+                * Correct HTTP status codes from the REST-API.
+                * Error messages in requested format.
+                * It should be able to add Response formats (like csv) whithout the need to recompile the servlet-code
+        
+HELP:
 
 Start Server:
  run cleanBuildRun.sh
